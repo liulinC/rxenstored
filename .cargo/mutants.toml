@@ -1,0 +1,33 @@
+# cargo-mutants configuration (scripts/mutants.sh).
+#
+# Mutants excluded because they are provably equivalent: no input, no
+# environment can tell them from the code. Each entry says why. Mutants
+# that are equivalent only under an operating-system contract (a call that
+# never returns 0, an error that cannot happen with these arguments) are
+# not excluded: they stay visible as missed.
+# Adding an entry here is a change to review like code.
+exclude_re = [
+    # `|` to `^` where the operands share no bit: then a | b == a ^ b.
+    # signal_fd: SFD_CLOEXEC (0o2000000) | SFD_NONBLOCK (0o4000).
+    'crates/xs-sys/src/lib\.rs:\d+:\d+: replace \| with \^ in signal_fd$',
+    # Interest::bits: EPOLLIN (0x1) | EPOLLRDHUP (0x2000).
+    'crates/xs-sys/src/lib\.rs:\d+:\d+: replace \| with \^ in Interest::bits$',
+    # Epoll::wait: EPOLLHUP (0x10) | EPOLLERR (0x8) | EPOLLRDHUP (0x2000).
+    'crates/xs-sys/src/lib\.rs:\d+:\d+: replace \| with \^ in Epoll::wait$',
+    # memfd: MFD_CLOEXEC (1) | MFD_ALLOW_SEALING (2); F_SEAL_SHRINK (2) |
+    # F_SEAL_GROW (4) | F_SEAL_SEAL (1).
+    'crates/xs-sys/src/fd\.rs:\d+:\d+: replace \| with \^ in memfd$',
+    # hypercall_page: PROT_READ (1) | PROT_WRITE (2); MAP_PRIVATE (0x2) |
+    # MAP_ANONYMOUS (0x20) | MAP_LOCKED (0x2000).
+    'crates/xs-sys/src/xen/mod\.rs:\d+:\d+: replace \| with \^ in hypercall_page$',
+    # ioc_none: size << 16 | type << 8 | nr, with nr and type bytes and the
+    # size below 2^14 (asm-generic/ioctl.h): three disjoint fields.
+    'crates/xs-sys/src/xen/abi\.rs:\d+:\d+: replace \| with \^ in ioc_none$',
+    # SyslogOut::send: facility | severity, a facility code a multiple of 8
+    # (Facility::code) and a severity 0 to 7 (format::severity, the only
+    # source of the severities passed).
+    'crates/xs-daemon/src/log/dest\.rs:\d+:\d+: replace \| with \^ in SyslogOut::send$',
+    # XEN_DOMINF_DYING = 1 << 0: 1 >> 0 is 1 too. By line: a constant has no
+    # function to name; if the line moves, the mutant shows again as missed.
+    'crates/xs-sys/src/xen/abi\.rs:243:44: replace << with >>$',
+]

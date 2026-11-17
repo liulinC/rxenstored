@@ -1,0 +1,21 @@
+[package]
+name = "xs-core"
+description = "Xenstore core: store, transactions, watches, connection state machines (no I/O)"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+xs-wire = { path = "../xs-wire" }
+
+[features]
+# Builds the crate against std instead of `core` and `alloc` only. Only for
+# scripts/mutants.sh: the code cargo-mutants writes names std's items.
+std = []
+
+[lints]
+workspace = true

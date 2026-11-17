@@ -1,0 +1,26 @@
+[package]
+name = "xs-sys"
+description = "All the unsafe code of rxenstored: thin, safe wrappers over system calls"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+libc = "0.2"
+
+[features]
+# Ring mapping by grant through gntdev (`RingMapping::Grant`), as C
+# xenstored does. Off by default: the daemon maps rings by gfn, as
+# oxenstored does, and this path has never run on a host.
+gnttab = []
+
+[[example]]
+name = "xen_probe"
+required-features = ["gnttab"]
+
+[lints]
+workspace = true

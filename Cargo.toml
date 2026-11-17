@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = ["crates/xs-wire", "crates/xs-sys", "crates/xs-core", "crates/xs-daemon", "crates/xs-bench", "crates/xs-sim", "crates/xs-diff"]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+# The toolchain the workspace is built and tested with; older ones were not tried.
+rust-version = "1.96.1"
+license = "GPL-2.0-only"
+authors = ["Olivier Lambert <olivier.lambert@vates.tech>"]
+repository = "https://github.com/olivierlambert/rxenstored"
+# Not on crates.io: the crate names are generic and the crates are parts of one daemon.
+publish = false
+
+[profile.release]
+debug = 1
+# A panic does not unwind: the process aborts (xs-daemon/src/fatal.rs).
+panic = "abort"
+
+# The no-panic rule: code that is not a test
+# must not be able to panic on any input. Each crate but xs-bench (a load
+# tool) opts in with `[lints] workspace = true`. Tests are exempt: a crate's
+# unit tests by `#![cfg_attr(test, allow(...))]` at its root, each
+# integration-test crate and example by an `allow` at its root. Gate:
+# scripts/lint.sh.
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+unreachable = "deny"
+indexing_slicing = "deny"
+string_slice = "deny"
+get_unwrap = "deny"
+unwrap_in_result = "deny"
+panic_in_result_fn = "deny"
+exit = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+unchecked_time_subtraction = "deny"

@@ -1,0 +1,43 @@
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A1           watch     backend/vbd3 tapback-master-back
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A5           watch     /local/logconsole logconsole
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A5           watch     @introduceDomain domlist
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A5           watch     @releaseDomain domlist
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/control/feature-balloon squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/data/updated squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/dynamic-max squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/dynamic-min squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/initial-reservation squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/memory-offset squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/target squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     /local/domain/0/memory/uncooperative squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     @introduceDomain squeezed
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A6           watch     @releaseDomain squeezed
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     /local/domain/0/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     /local/domain/0/memory/dynamic-max xcp-rrdd-plugins/squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     /local/domain/0/memory/dynamic-min xcp-rrdd-plugins/squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     /local/domain/0/memory/target xcp-rrdd-plugins/squeezed:domain-0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     @introduceDomain
+Jan  1 00:00:00 xcp-ng-host oxenstored:  A7           watch     @releaseDomain
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     backend FFFFFFFF8209E860
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     control/shutdown FFFFFFFF8209E380
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     control/sysrq FFFFFFFF8209E3A0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     cpu FFFFFFFF8209DFC0
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     device FFFFFFFF8209EA60
+Jan  1 00:00:00 xcp-ng-host oxenstored:  D0           watch     memory/target FFFFFFFF8209F1A0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/attr xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/console/tc-port xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/console/vnc-port xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/control xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/data/pvs_target xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/data/service xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/data/ts xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/device xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/feature xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/memory/target xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/memory/uncooperative xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/qemu-pid-signal xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/rrd xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/vm-data xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/xenserver/attr xenopsd-xc:domain-0
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     @introduceDomain
+Jan  1 00:00:36 xcp-ng-host oxenstored:  A11          watch     @releaseDomain

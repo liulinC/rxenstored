@@ -1,0 +1,17 @@
+[package]
+name = "xs-bench"
+description = "Load generator for any xenstored: replays recorded VM lifecycle traffic at scale"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+repository.workspace = true
+publish.workspace = true
+
+[dependencies]
+xs-wire = { path = "../xs-wire" }
+xs-sys = { path = "../xs-sys" }
+
+# Not under the no-panic lints of the workspace: a load generator run by hand on test machines, whose panic ends
+# only itself. Clippy's default lints apply, as everywhere (scripts/lint.sh).

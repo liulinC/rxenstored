@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: GPL-2.0-only
+# Copyright (c) 2026 Olivier Lambert <olivier.lambert@vates.tech>
+
+# 120 rather than the default 100: the code was written wide, and at 100
+# rustfmt breaks most signatures and call chains over several lines.
+max_width = 120

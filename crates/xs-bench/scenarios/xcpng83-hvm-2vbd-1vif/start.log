@@ -1,0 +1,933 @@
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           write     /squeezed/state/xenopsd/00000000-0000-4000-8000-000000000002 2117632
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       rm        /local/domain/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       rm        /xenops/domain/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       rm        /libxl/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4 n0 r4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /xenops/domain/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /xenops/domain/4 n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /libxl/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /libxl/4 n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /vm/00000000-0000-4000-8000-000000000001
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /vm/00000000-0000-4000-8000-000000000001 n0 r4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /vm/00000000-0000-4000-8000-000000000001/uuid 00000000-0000-4000-8000-000000000001
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /vm/00000000-0000-4000-8000-000000000001/name test-guest
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /vm/00000000-0000-4000-8000-000000000001/domains/4 /local/domain/4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /vm/00000000-0000-4000-8000-000000000001/domains/4/create-time 27675635336724
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /local/domain/4/vm /vm/00000000-0000-4000-8000-000000000001
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       write     /local/domain/4/name test-guest
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/cpu
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/cpu n0 r4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/memory
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/memory n0 r4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/device
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/device n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/device/vbd
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/device/vbd n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/device/9pfs
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/device/9pfs n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/device/vif
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/device/vif n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/feature
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/feature n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/error
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/error n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/drivers
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/drivers n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/control
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/control n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/attr
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/attr n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/xenserver/attr
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/xenserver/attr n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/data
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/data n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/messages
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/messages n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/vm-data
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/vm-data n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/hvmloader
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/hvmloader n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /local/domain/4/rrd
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /local/domain/4/rrd n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /xenops/domain/4/device
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /xenops/domain/4/device n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /xenops/domain/4/device/vbd
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /xenops/domain/4/device/vbd n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /xenops/domain/4/device/9pfs
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /xenops/domain/4/device/9pfs n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       mkdir     /xenops/domain/4/device/vif
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.22       setperms  /xenops/domain/4/device/vif n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/vm-data/mmio-hole-size 268435456
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/generation-id
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/acpi_s4 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/acpi_s3 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/featureset 00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000-00000000
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/timeoffset 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/usb true
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/usb_tablet true
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/cores-per-socket 2
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/device-model qemu-upstream-compat
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/secureboot false
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/pae true
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/apic true
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/acpi 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/viridian false
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/nx true
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/vcpu/number 2
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/vcpu/current 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/vcpu/weight 256
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/platform/vcpu/cap 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/bios-vendor Xen
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/bios-version
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/system-manufacturer Xen
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/system-product-name HVM domU
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/system-version
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/system-serial-number
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/hp-rombios
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/oem-1 Xen
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/bios-strings/oem-2 MS_VM_CERT/SHA1/bdbeb6e0a816d43fa6d3fe8aaef04c2bad9d3e3d
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/hvmloader/pci/xen-platform-pci-bar-uc 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/action-request poweroff
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/platform-feature-multiprocessor-suspend 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/platform-feature-xs_reset_watches 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/has-vendor-device 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/unique-domain-id 00000000-0000-4000-8000-000000000003
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           write     /local/domain/4/memory/initial-reservation 2117632
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           write     /local/domain/4/memory/reservation-id 00000000-0000-4000-8000-000000000002
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           write     /squeezed/state/xenopsd/00000000-0000-4000-8000-000000000002/in-transfer 4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/memory/initial-target 2097152
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/cpu/0/availability online
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/cpu/1/availability offline
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/domain-type hvm
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A294         write     /local/domain/4/vm-data/mmio-hole-size 268435456
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/memory/static-max 2097152
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/memory/target 2097152
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/domid 4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/store/port 3
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/store/ring-ref 1044476
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/serial/0/limit 65536
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/console/port 4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/console/ring-ref 1044479
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.23       write     /local/domain/4/console/limit 65536
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.24       write     /vm/00000000-0000-4000-8000-000000000001/rtc/timeoffset 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /libxl/4/type HVM
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A5           w event   @introduceDomain domlist
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   @introduceDomain
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   @introduceDomain squeezed
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   @introduceDomain
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           watch     /local/domain/4/memory/dynamic-max xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/attr xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/memory/dynamic-max xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/data/ts xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/data/ts xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/data/service xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/data/service xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/data/pvs_target xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/data/pvs_target xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/memory/target xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/memory/target xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/memory/uncooperative xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/memory/uncooperative xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/console/vnc-port xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/console/vnc-port xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/console/tc-port xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/console/tc-port xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/qemu-pid-signal xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/qemu-pid-signal xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/control xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/device xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/rrd xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/rrd xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/vm-data xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/vm-data xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/feature xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/feature xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           watch     /local/domain/4/memory/dynamic-min xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /vm/00000000-0000-4000-8000-000000000001/rtc/timeoffset xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/memory/dynamic-min xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /vm/00000000-0000-4000-8000-000000000001/rtc/timeoffset xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/4/xenserver/attr xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/xenserver/attr xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/initial-reservation squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/initial-reservation squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A5           watch     /local/domain/4/console dom4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/target squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A5           w event   /local/domain/4/console dom4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/target squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/control/feature-balloon squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/control/feature-balloon squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/data/updated squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/memory/dynamic-min 2097152
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/memory/dynamic-min xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/data/updated squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/memory-offset squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /local/domain/4/memory/dynamic-max 2097152
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/memory/dynamic-max xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/memory-offset squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/uncooperative squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/uncooperative squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           watch     /local/domain/4/memory/target xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/memory/target xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           watch     /local/domain/4/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/dynamic-min squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/dynamic-min squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           watch     /local/domain/4/memory/dynamic-max squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/dynamic-max squeezed:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A5           write     /local/domain/4/console/tty /dev/pts/7
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A5           w event   /local/domain/4/console/tty dom4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A6           rm        /squeezed/state/xenopsd/00000000-0000-4000-8000-000000000002
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /vm/00000000-0000-4000-8000-000000000001/devices/vif/0 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /vm/00000000-0000-4000-8000-000000000001/devices/vbd/xvda 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /vm/00000000-0000-4000-8000-000000000001/devices/vbd/xvdb 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       rm        /local/domain/4/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       rm        /xenops/domain/4/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       rm        /local/domain/0/backend/vif/4/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /local/domain/4/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /local/domain/4/device/vif/0 n4 r0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /xenops/domain/4/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /xenops/domain/4/device/vif/0 n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /local/domain/0/backend/vif/4/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /local/domain/0/backend/vif/4/0 n0 r4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0 n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/backend /local/domain/0/backend/vif/4/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/backend-id 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/state 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/handle 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/mac 02:00:00:00:00:01
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/disconnect 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/device/vif/0/mtu 1500
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xenops/domain/4/device/vif/0/backend /local/domain/0/backend/vif/4/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/frontend /local/domain/4/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/frontend-id 4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/online 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/state 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/script /usr/libexec/xenopsd/vif
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/mac 02:00:00:00:00:01
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/0/backend/vif/4/0/handle 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /xapi/00000000-0000-4000-8000-000000000001/private/vif/0 n0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/backend-kind vif
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/backend-id 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/vif-id 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/vif-uuid 00000000-0000-4000-8000-000000000004
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/network-uuid 00000000-0000-4000-8000-000000000005
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/locking-mode unlocked
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/setup-vif-rules /usr/libexec/xenopsd/setup-vif-rules
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/setup-pvs-proxy-rules /usr/libexec/xenopsd/pvs-proxy-ovs-setup
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/xenopsd-backend classic
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/mac 02:00:00:00:00:01
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/trunks
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/MTU 1500
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/bridge xenbr0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /xapi/00000000-0000-4000-8000-000000000001/private/vif/0/bridge-MAC fe:ff:ff:ff:ff:ff
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       mkdir     /local/domain/4/xenserver/device/vif/0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       setperms  /local/domain/4/xenserver/device/vif/0 n4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/xenserver/device/vif/0/static-ip-setting/mac 02:00:00:00:00:01
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/xenserver/device/vif/0/static-ip-setting/error-code 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/xenserver/device/vif/0/static-ip-setting/error-msg
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/xenserver/device/vif/0/static-ip-setting/enabled 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11.25       write     /local/domain/4/xenserver/device/vif/0/static-ip-setting/enabled6 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0 xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0 FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0 xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0 FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/backend xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/frontend FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/backend-id xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/frontend-id FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/state xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/online FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/handle xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/state FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/mac xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/script FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/disconnect xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/mac FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/mtu xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/handle FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          write     /xenops/tasks/4/vif/0/cancel
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-sg 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-gso-tcpv4 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-gso-tcpv6 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-ipv6-csum-offload 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-rx-copy 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-rx-flip 0
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-multicast-control 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.15        write     backend/vif/4/0/feature-dynamic-multicast-control 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-sg FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-gso-tcpv4 FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-gso-tcpv6 FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/hotplug-error auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-ipv6-csum-offload FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-rx-copy FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/hotplug-error auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-rx-flip FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-multicast-control FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/hotplug auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-dynamic-multicast-control FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/hotplug auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           write     backend/vif/4/0/feature-split-event-channels 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vif/0/cancel auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-split-event-channels FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           write     backend/vif/4/0/multi-queue-max-queues 4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/params xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vif/0/cancel auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/multi-queue-max-queues FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           write     backend/vif/4/0/feature-ctrl-ring 1
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vif/0/shutdown auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/params xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/feature-ctrl-ring FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vif/4/0/state xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vif/0/shutdown auto:11
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/state xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           watch     /local/domain/4/device/vif/0/state FFFF8880624B4020
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   /local/domain/4/device/vif/0/state FFFF8880624B4020
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0.16        write     backend/vif/4/0/state 2
+Jan  1 07:41:11 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/state FFFFFFFF8209E860
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/state xenopsd-xc:domain-4
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A311         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/vif-ifindex 17
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A314.1       rm        /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/vif-ofport
+Jan  1 07:41:11 xcp-ng-host oxenstored:  A316         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/vif-ofport 8
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A320         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/vif vif4.0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A321         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/hotplug online
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/hotplug auto:11
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /local/domain/0/backend/vif/4/0/hotplug-error auto:11
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/hotplug auto:11
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vif/0/cancel auto:11
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          rm        /xenops/tasks/4/vif/0/cancel
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vif/0/shutdown auto:11
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A322         write     backend/vif/4/0/hotplug-status connected
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/hotplug-status FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /xapi/00000000-0000-4000-8000-000000000001/private/vdis/xvdb {\"attach_info\":{\"implementations\":[[\"XenDisk\",{\"backend_type\":\"vbd3\",\"extra\":{\"vdi-uuid\":\"00000000-0000-4000-8000-000000000006\",\"scsi/0x12/0x80\":\"AIAAEjAwMDAwMDAwLTAwMDAtNDAgIA==\",\"scsi/0x12/0x83\":\"AIMAMQIBAC1YRU5TUkMgIDAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwNiA=\",\"mem-pool\":\"00000000-0000-4000-8000-000000000007\"},\"params\":\"/dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006\"}],[\"BlockDevice\",{\"path\":\"/dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006\"}],[\"Nbd\",{\"uri\":\"nbd:unix:/run/blktap-control/nbd/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006:exportname=00000000-0000-4000-8000-000000000006\"}]]},\"domid\":0}
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /xapi/00000000-0000-4000-8000-000000000001/private/vdis/xvda {\"attach_info\":{\"implementations\":[[\"XenDisk\",{\"backend_type\":\"vbd3\",\"extra\":{\"vdi-uuid\":\"00000000-0000-4000-8000-000000000008\",\"scsi/0x12/0x80\":\"AIAAEjAwMDAwMDAwLTAwMDAtNDAgIA==\",\"scsi/0x12/0x83\":\"AIMAMQIBAC1YRU5TUkMgIDAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwOCA=\",\"mem-pool\":\"00000000-0000-4000-8000-000000000007\"},\"params\":\"/dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008\"}],[\"BlockDevice\",{\"path\":\"/dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008\"}],[\"Nbd\",{\"uri\":\"nbd:unix:/run/blktap-control/nbd/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008:exportname=00000000-0000-4000-8000-000000000008\"}]]},\"domid\":0}
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       rm        /local/domain/4/device/vbd/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       rm        /xenops/domain/4/device/vbd/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       rm        /local/domain/0/backend/vbd3/4/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /local/domain/4/device/vbd/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /local/domain/4/device/vbd/832 n4 r0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /xenops/domain/4/device/vbd/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /xenops/domain/4/device/vbd/832 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /local/domain/0/backend/vbd3/4/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /local/domain/0/backend/vbd3/4/832 n0 r4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/832 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/4/device/vbd/832/backend /local/domain/0/backend/vbd3/4/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/4/device/vbd/832/device-type disk
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/4/device/vbd/832/backend-id 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/4/device/vbd/832/virtual-device 832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/4/device/vbd/832/state 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xenops/domain/4/device/vbd/832/backend /local/domain/0/backend/vbd3/4/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/frontend /local/domain/4/device/vbd/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/sm-data/scsi/0x12/0x83 AIMAMQIBAC1YRU5TUkMgIDAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwNiA=
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/polling-idle-threshold 50
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/dev xvdb
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/removable 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/sm-data/mem-pool 00000000-0000-4000-8000-000000000007
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/mode w
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/sm-data/vdi-uuid 00000000-0000-4000-8000-000000000006
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/params /dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/sm-data/scsi/0x12/0x80 AIAAEjAwMDAwMDAwLTAwMDAtNDAgIA==
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/online 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/frontend-id 4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/type phy
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/sm-data/backend-kind vbd3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/state 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /local/domain/0/backend/vbd3/4/832/polling-duration 8000
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832/backend-kind vbd3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832/backend-id 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832/dp-id vbd/4/xvdb
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832/vdi-id [[\"VDI\",\"00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006\"]]
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/832/vbd3-id xvdb
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       mkdir     /local/domain/4/xenserver/device/vbd3/832
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.26       setperms  /local/domain/4/xenserver/device/vbd3/832 n4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832 xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832 xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/frontend tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/backend xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/frontend FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sm-data/scsi/0x12/0x83 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/device-type xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sm-data/scsi/0x12/0x83 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/polling-idle-threshold tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/backend-id xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/polling-idle-threshold FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/dev tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/virtual-device xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/dev FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/removable tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/removable FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sm-data/mem-pool tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sm-data/mem-pool FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/mode tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/mode FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sm-data/vdi-uuid tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sm-data/vdi-uuid FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/params tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/params FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sm-data/scsi/0x12/0x80 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sm-data/scsi/0x12/0x80 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/online tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/online FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/frontend-id tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/frontend-id FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/type tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/type FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sm-data/backend-kind tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sm-data/backend-kind FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/state tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/state FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/polling-duration tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/polling-duration FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /xenops/tasks/4/vbd3/832/cancel
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/hotplug-error auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/hotplug-error auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/hotplug-status auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/hotplug-status auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         watch     backend/vbd3/4 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vbd3/832/cancel auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vbd3/832/cancel auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vbd3/832/shutdown auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vbd3/832/shutdown auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/params xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/params xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/832/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/832/max-ring-page-order 3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/max-ring-page-order FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/max-ring-page-order tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/max-ring-page-order tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         setperms  backend/vbd3/4/832/max-ring-page-order n0 r4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/max-ring-page-order FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/max-ring-page-order tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/max-ring-page-order tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         watch     /local/domain/4/device/vbd/832/state tapback-4-front
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/832/state tapback-4-front
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       rm        /local/domain/4/device/vbd/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       rm        /xenops/domain/4/device/vbd/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       rm        /local/domain/0/backend/vbd3/4/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /local/domain/4/device/vbd/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /local/domain/4/device/vbd/768 n4 r0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /xenops/domain/4/device/vbd/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /xenops/domain/4/device/vbd/768 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /local/domain/0/backend/vbd3/4/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /local/domain/0/backend/vbd3/4/768 n0 r4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/768 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/4/device/vbd/768/backend /local/domain/0/backend/vbd3/4/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/4/device/vbd/768/device-type disk
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/4/device/vbd/768/backend-id 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/4/device/vbd/768/virtual-device 768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/4/device/vbd/768/state 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xenops/domain/4/device/vbd/768/backend /local/domain/0/backend/vbd3/4/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/frontend /local/domain/4/device/vbd/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/sm-data/scsi/0x12/0x83 AIMAMQIBAC1YRU5TUkMgIDAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwOCA=
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/polling-idle-threshold 50
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/dev xvda
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/removable 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/sm-data/mem-pool 00000000-0000-4000-8000-000000000007
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/mode w
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/sm-data/vdi-uuid 00000000-0000-4000-8000-000000000008
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/params /dev/sm/backend/00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/sm-data/scsi/0x12/0x80 AIAAEjAwMDAwMDAwLTAwMDAtNDAgIA==
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/online 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/frontend-id 4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/type phy
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/sm-data/backend-kind vbd3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/state 1
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /local/domain/0/backend/vbd3/4/768/polling-duration 8000
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768 n0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768/backend-kind vbd3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768/backend-id 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768/dp-id vbd/4/xvda
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768/vdi-id [[\"VDI\",\"00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008\"]]
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       write     /xapi/00000000-0000-4000-8000-000000000001/private/vbd3/768/vbd3-id xvda
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       mkdir     /local/domain/4/xenserver/device/vbd3/768
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11.27       setperms  /local/domain/4/xenserver/device/vbd3/768 n4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768 xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768 xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/frontend tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/frontend tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/backend xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/frontend FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x83 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x83 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/device-type xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x83 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/polling-idle-threshold tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/polling-idle-threshold tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/backend-id xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/polling-idle-threshold FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/dev tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/dev tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/virtual-device xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/dev FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/removable tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/removable tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/removable FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sm-data/mem-pool tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sm-data/mem-pool tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sm-data/mem-pool FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/mode tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/mode tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/mode FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sm-data/vdi-uuid tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sm-data/vdi-uuid tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sm-data/vdi-uuid FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/params tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/params tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/params FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x80 tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x80 tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sm-data/scsi/0x12/0x80 FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/online tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/online tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/online FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/frontend-id tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/frontend-id tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/frontend-id FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/type tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/type tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/type FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sm-data/backend-kind tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sm-data/backend-kind tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sm-data/backend-kind FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/state tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/state tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/state FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/polling-duration tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/polling-duration tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/polling-duration FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/768/max-ring-page-order 3
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/max-ring-page-order FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/max-ring-page-order tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/max-ring-page-order tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         setperms  backend/vbd3/4/768/max-ring-page-order n0 r4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/max-ring-page-order FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/max-ring-page-order tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/max-ring-page-order tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         watch     /local/domain/4/device/vbd/768/state tapback-4-front
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/768/state tapback-4-front
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /xenops/tasks/4/vbd3/768/cancel
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/tapdisk-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/hotplug-error auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/shutdown-done xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/hotplug-error auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/hotplug-status auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/params xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/hotplug-status auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/params xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vbd3/768/cancel auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /local/domain/0/backend/vbd3/4/768/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vbd3/768/cancel auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          watch     /xenops/tasks/4/vbd3/768/shutdown auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vbd3/768/shutdown auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A334         write     backend/vbd3/4/832/physical-device fe:6
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/physical-device tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/physical-device tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/physical-device FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/832/kthread-pid 283186
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/kthread-pid tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/kthread-pid FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/kthread-pid tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A335         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/832/hotplug online
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A337         write     backend/vbd3/4/832/hotplug-status connected
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/hotplug-status tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/hotplug-status tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/hotplug-status FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/hotplug-status auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /local/domain/0/backend/vbd3/4/832/hotplug-error auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /local/domain/0/backend/vbd3/4/832/hotplug-status auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/832/state 2
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          rm        /xenops/tasks/4/vbd3/832/cancel
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/state tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/state FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/state tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vbd3/832/cancel auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /xenops/tasks/4/vbd3/832/cancel auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vbd3/832/shutdown auto:12
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A338         write     backend/vbd3/4/768/physical-device fe:7
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/physical-device tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/physical-device tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/physical-device FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /local/domain/0/backend/vbd3/4/832/vdi [\"VDI\",\"00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000006\"]
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/vdi tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/vdi tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/vdi FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/768/kthread-pid 283192
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/kthread-pid tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/kthread-pid xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/kthread-pid FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/kthread-pid tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A339         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vbd3/768/hotplug online
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A340         write     backend/vbd3/4/768/hotplug-status connected
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/hotplug-status tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/hotplug-status tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/hotplug-status auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/hotplug-status FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/hotplug-status xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /local/domain/0/backend/vbd3/4/768/hotplug-error auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /local/domain/0/backend/vbd3/4/768/hotplug-status auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vbd3/768/cancel auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          unwatch   /xenops/tasks/4/vbd3/768/shutdown auto:13
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/768/state 2
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          rm        /xenops/tasks/4/vbd3/768/cancel
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/state tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/state xenopsd-xc:domain-4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/state FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/state tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /local/domain/0/backend/vbd3/4/768/vdi [\"VDI\",\"00000000-0000-4000-8000-000000000007/00000000-0000-4000-8000-000000000008\"]
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/vdi tapback-master-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/vdi tapback-4-back
+Jan  1 07:41:12 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/vdi FFFFFFFF8209E860
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A348         write     /local/domain/4/hvmloader/allow-memory-relocate 0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A348         write     /local/domain/4/platform/device-model qemu_xen
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A348         write     /libxl/4/dm-version qemu_xen
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A349         watch     /local/domain/4/data/set_clipboard set_clipboard
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A349         w event   /local/domain/4/data/set_clipboard set_clipboard
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A349         watch     /local/domain/4/data/report_clipboard report_clipboard
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A349         w event   /local/domain/4/data/report_clipboard report_clipboard
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A350         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/tap-ifindex 18
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A348         write     /local/domain/4/qemu-pid 283309
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A348         write     /local/domain/4/image/device-model-pid 283309
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         mkdir     device-model/4/backends/console
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         setperms  device-model/4/backends/console n0 n4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         watch     backend/console/4 be:0x560a20f0c576:4:0x560a21358340
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         w event   backend/console/4 be:0x560a20f0c576:4:0x560a21358340
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         mkdir     device-model/4/backends/vkbd
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         setperms  device-model/4/backends/vkbd n0 n4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         watch     backend/vkbd/4 be:0x560a20efe17b:4:0x560a2135a1e0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         w event   backend/vkbd/4 be:0x560a20efe17b:4:0x560a2135a1e0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         mkdir     device-model/4/backends/qusb
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         setperms  device-model/4/backends/qusb n0 n4
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         watch     backend/qusb/4 be:0x560a20efe180:4:0x560a213702a0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A354         w event   backend/qusb/4 be:0x560a20efe180:4:0x560a213702a0
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          write     /local/domain/4/serial/0/tty /dev/pts/8
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          rm        /local/domain/4/data/cant_suspend_reason
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A11          rm        /local/domain/4/action-request
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A356.1       rm        /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/tap-ofport
+Jan  1 07:41:12 xcp-ng-host oxenstored:  A358         write     /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/tap-ofport 9
+Jan  1 07:41:15 xcp-ng-host oxenstored:  D1           write     data/meminfo_free 369404
+Jan  1 07:41:15 xcp-ng-host oxenstored:  A7           w event   /local/domain/1/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-1
+Jan  1 07:41:19 xcp-ng-host oxenstored:  D2           write     data/meminfo_free 370656
+Jan  1 07:41:19 xcp-ng-host oxenstored:  A7           w event   /local/domain/2/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-2
+Jan  1 07:41:21 xcp-ng-host oxenstored:  D3           write     data/meminfo_free 366336
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A7           w event   /local/domain/3/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-3
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/feature-suspend 1
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-suspend xenopsd-xc:domain-4
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/feature-poweroff 1
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-poweroff xenopsd-xc:domain-4
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/feature-reboot 1
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-reboot xenopsd-xc:domain-4
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          write     /local/domain/4/control/feature-vcpu-hotplug 1
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-vcpu-hotplug xenopsd-xc:domain-4
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          write     /local/domain/4/data/updated 1
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/data/updated squeezed:domain-4
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A11          rm        /local/domain/4/data/cant_suspend_reason
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A366.1       rm        /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/tap-ofport
+Jan  1 07:41:21 xcp-ng-host oxenstored:  A367.1       rm        /xapi/00000000-0000-4000-8000-000000000001/hotplug/4/vif/0/tap-ifindex
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           reset watches
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     memory/target FFFFFFFFA0DC99E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   memory/target FFFFFFFFA0DC99E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     control/shutdown FFFFFFFFA0DC8CC0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   control/shutdown FFFFFFFFA0DC8CC0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     control/sysrq FFFFFFFFA0DC8D00
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   control/sysrq FFFFFFFFA0DC8D00
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           write     control/feature-poweroff 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-poweroff xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           write     control/feature-reboot 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-reboot xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           write     control/feature-suspend 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-suspend xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     backend FFFFFFFFA0DC91C0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   backend FFFFFFFFA0DC91C0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     device FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     /local/domain/0/backend/vbd3/4/768/state FFFF9ED2419B4820
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vbd3/4/768/state FFFF9ED2419B4820
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.3         write     device/vbd/768/ring-ref 8
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.3         write     device/vbd/768/event-channel 13
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.3         write     device/vbd/768/protocol x86_64-abi
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     /local/domain/0/backend/vif/4/0/state FFFF9ED2419B7020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vif/4/0/state FFFF9ED2419B7020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           watch     /local/domain/0/backend/vbd3/4/832/state FFFF9ED2419B4020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vbd3/4/832/state FFFF9ED2419B4020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.3         write     device/vbd/768/feature-persistent 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/ring-ref FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/ring-ref xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/event-channel FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/event-channel xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/protocol FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/protocol xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/feature-persistent FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/feature-persistent xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.4         write     device/vbd/768/state 3
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/state FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/768/state tapback-4-front
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/multi-queue-num-queues 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/tx-ring-ref 521
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/rx-ring-ref 522
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/event-channel-tx 14
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/event-channel-rx 15
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/request-rx-copy 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       write     backend/vbd3/4/768/feature-barrier 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/feature-rx-notify 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/feature-sg 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       setperms  backend/vbd3/4/768/feature-barrier n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/feature-gso-tcpv4 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       write     backend/vbd3/4/768/sector-size 512
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/feature-gso-tcpv6 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       setperms  backend/vbd3/4/768/sector-size n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.5         write     device/vif/0/feature-ipv6-csum-offload 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/multi-queue-num-queues FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/tx-ring-ref FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       write     backend/vbd3/4/768/sectors 6295552
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/multi-queue-num-queues xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/rx-ring-ref FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/tx-ring-ref xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/event-channel-tx FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/rx-ring-ref xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/event-channel-rx FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/event-channel-tx xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/request-rx-copy FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       setperms  backend/vbd3/4/768/sectors n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/event-channel-rx xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/feature-rx-notify FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/request-rx-copy xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/feature-sg FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/feature-rx-notify xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/feature-gso-tcpv4 FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/feature-sg xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/feature-gso-tcpv6 FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       write     backend/vbd3/4/768/info 0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/feature-gso-tcpv4 xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/feature-ipv6-csum-offload FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/feature-gso-tcpv6 xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/feature-ipv6-csum-offload xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.1       setperms  backend/vbd3/4/768/info n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/feature-barrier tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/feature-barrier tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/feature-barrier FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/feature-barrier tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/feature-barrier tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/feature-barrier FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sector-size tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sector-size tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sector-size FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sector-size tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sector-size tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sector-size FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sectors tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sectors tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sectors FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/sectors tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/sectors tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/sectors FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/info tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/info tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/info FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/info tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/info tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/info FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/768/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vbd3/4/768/state FFFF9ED2419B4820
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/768/state tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/768/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/768/state FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/768/state tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.6         write     device/vif/0/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vif/0/state FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vif/0/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   /local/domain/4/device/vif/0/state FFFF8880624B4020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.7         write     device/vbd/832/ring-ref 523
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.7         write     device/vbd/832/event-channel 16
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.7         write     device/vbd/832/protocol x86_64-abi
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.7         write     device/vbd/832/feature-persistent 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/ring-ref FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/ring-ref xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/event-channel FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/event-channel xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/protocol FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/protocol xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/feature-persistent FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/feature-persistent xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           watch     backend/vif/4/0/rate FFFF88806423DD70
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/rate FFFF88806423DD70
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           watch     /local/domain/4/device/vif/0/request-multicast-control FFFF88806423DD90
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   /local/domain/4/device/vif/0/request-multicast-control FFFF88806423DD90
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           watch     backend/vif/4/0/hotplug-status FFFF888061757318
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/hotplug-status FFFF888061757318
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0.17        write     backend/vif/4/0/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vif/4/0/state FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vif/4/0/state FFFF9ED2419B7020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vif/4/0/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           unwatch   backend/vif/4/0/hotplug-status FFFF888061757318
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.8         write     device/vbd/832/state 3
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/state FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/832/state tapback-4-front
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       write     backend/vbd3/4/832/feature-barrier 1
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       setperms  backend/vbd3/4/832/feature-barrier n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       write     backend/vbd3/4/832/sector-size 512
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       setperms  backend/vbd3/4/832/sector-size n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       write     backend/vbd3/4/832/sectors 20480
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       setperms  backend/vbd3/4/832/sectors n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       write     backend/vbd3/4/832/info 0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326.2       setperms  backend/vbd3/4/832/info n0 r4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/feature-barrier tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/feature-barrier tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/feature-barrier FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/feature-barrier tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/feature-barrier tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/feature-barrier FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sector-size tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/sector-size tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sector-size FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sector-size tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/sector-size tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sector-size FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sectors tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/sectors tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sectors FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/sectors tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/sectors tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/sectors FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/info tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/info tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/info FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/info tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/info tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/info FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         write     backend/vbd3/4/832/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A1           w event   backend/vbd3/4/832/state tapback-master-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/0/backend/vbd3/4/832/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   /local/domain/0/backend/vbd3/4/832/state FFFF9ED2419B4020
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D0           w event   backend/vbd3/4/832/state FFFFFFFF8209E860
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   backend/vbd3/4/832/state tapback-4-back
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.9         write     device/vbd/768/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/768/state FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/768/state tapback-4-front
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/768/state xenopsd-xc:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A6.4         write     /local/domain/4/memory/memory-offset -12
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/memory/memory-offset squeezed:domain-4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4.10        write     device/vbd/832/state 4
+Jan  1 07:41:23 xcp-ng-host oxenstored:  D4           w event   device/vbd/832/state FFFFFFFFA0DC93E0
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A326         w event   /local/domain/4/device/vbd/832/state tapback-4-front
+Jan  1 07:41:23 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/device/vbd/832/state xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           rm        attr/vif
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/PVAddons/MajorVersion 1
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/PVAddons/MajorVersion xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/PVAddons/MinorVersion 0
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/PVAddons/MinorVersion xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/PVAddons/MicroVersion 0
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/PVAddons/MicroVersion xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/PVAddons/BuildVersion proto-0.4.0
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/PVAddons/BuildVersion xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     data/os_distro Debian
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     data/os_name Debian 13
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     data/os_uname 6.12.38+deb13-amd64
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     data/meminfo_total 2016968
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     control/feature-balloon 1
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A6           w event   /local/domain/4/control/feature-balloon squeezed:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/control/feature-balloon xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/vif/0
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0 xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv4/0 192.0.2.142
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv4/0 xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/0 fe80::0:ff:fe00:1
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/0 xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     data/meminfo_free 1787924
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D2           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/2/attr/vif/0/ipv6/1 xenopsd-xc:domain-2
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:1
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/1 xenopsd-xc:domain-4
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D1           write     attr/vif/0/ipv6/0 2001:db8:0:1:0:ff:fe00:2
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/1/attr/vif/0/ipv6/0 xenopsd-xc:domain-1
+Jan  1 07:41:30 xcp-ng-host oxenstored:  D3           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:3
+Jan  1 07:41:30 xcp-ng-host oxenstored:  A11          w event   /local/domain/3/attr/vif/0/ipv6/1 xenopsd-xc:domain-3
+Jan  1 07:41:31 xcp-ng-host oxenstored:  D2           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:4
+Jan  1 07:41:31 xcp-ng-host oxenstored:  A11          w event   /local/domain/2/attr/vif/0/ipv6/2 xenopsd-xc:domain-2
+Jan  1 07:41:31 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:1
+Jan  1 07:41:31 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/2 xenopsd-xc:domain-4
+Jan  1 07:41:31 xcp-ng-host oxenstored:  D1           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:2
+Jan  1 07:41:31 xcp-ng-host oxenstored:  A11          w event   /local/domain/1/attr/vif/0/ipv6/2 xenopsd-xc:domain-1
+Jan  1 07:41:31 xcp-ng-host oxenstored:  D3           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:3
+Jan  1 07:41:31 xcp-ng-host oxenstored:  A11          w event   /local/domain/3/attr/vif/0/ipv6/2 xenopsd-xc:domain-3
+Jan  1 07:41:31 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:1
+Jan  1 07:41:31 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/1 xenopsd-xc:domain-4
+Jan  1 07:41:32 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:1
+Jan  1 07:41:32 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/2 xenopsd-xc:domain-4
+Jan  1 07:42:15 xcp-ng-host oxenstored:  D1           write     data/meminfo_free 368740
+Jan  1 07:42:15 xcp-ng-host oxenstored:  A7           w event   /local/domain/1/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-1
+Jan  1 07:42:15 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:1
+Jan  1 07:42:15 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/2 xenopsd-xc:domain-4
+Jan  1 07:42:15 xcp-ng-host oxenstored:  D3           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:3
+Jan  1 07:42:15 xcp-ng-host oxenstored:  A11          w event   /local/domain/3/attr/vif/0/ipv6/2 xenopsd-xc:domain-3
+Jan  1 07:42:15 xcp-ng-host oxenstored:  D1           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:2
+Jan  1 07:42:15 xcp-ng-host oxenstored:  A11          w event   /local/domain/1/attr/vif/0/ipv6/2 xenopsd-xc:domain-1
+Jan  1 07:42:15 xcp-ng-host oxenstored:  D2           write     attr/vif/0/ipv6/2 2001:db8:0:2:0:ff:fe00:4
+Jan  1 07:42:15 xcp-ng-host oxenstored:  A11          w event   /local/domain/2/attr/vif/0/ipv6/2 xenopsd-xc:domain-2
+Jan  1 07:42:19 xcp-ng-host oxenstored:  D2           write     data/meminfo_free 370664
+Jan  1 07:42:19 xcp-ng-host oxenstored:  A7           w event   /local/domain/2/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-2
+Jan  1 07:42:21 xcp-ng-host oxenstored:  D3           write     data/meminfo_free 366352
+Jan  1 07:42:21 xcp-ng-host oxenstored:  A7           w event   /local/domain/3/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-3
+Jan  1 07:42:25 xcp-ng-host oxenstored:  D4           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:1
+Jan  1 07:42:25 xcp-ng-host oxenstored:  A11          w event   /local/domain/4/attr/vif/0/ipv6/1 xenopsd-xc:domain-4
+Jan  1 07:42:25 xcp-ng-host oxenstored:  D1           write     attr/vif/0/ipv6/0 2001:db8:0:1:0:ff:fe00:2
+Jan  1 07:42:25 xcp-ng-host oxenstored:  A11          w event   /local/domain/1/attr/vif/0/ipv6/0 xenopsd-xc:domain-1
+Jan  1 07:42:25 xcp-ng-host oxenstored:  D2           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:4
+Jan  1 07:42:25 xcp-ng-host oxenstored:  A11          w event   /local/domain/2/attr/vif/0/ipv6/1 xenopsd-xc:domain-2
+Jan  1 07:42:25 xcp-ng-host oxenstored:  D3           write     attr/vif/0/ipv6/1 2001:db8:0:1:0:ff:fe00:3
+Jan  1 07:42:25 xcp-ng-host oxenstored:  A11          w event   /local/domain/3/attr/vif/0/ipv6/1 xenopsd-xc:domain-3
+Jan  1 07:42:31 xcp-ng-host oxenstored:  D4           write     data/meminfo_free 1770156
+Jan  1 07:42:31 xcp-ng-host oxenstored:  A7           w event   /local/domain/4/data/meminfo_free xcp-rrdd-plugins/squeezed:domain-4

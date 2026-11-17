@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="834" viewBox="0 0 760 834" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" role="img" aria-label="With 500 guests running: operations and the daemon at rest">
+<rect width="760" height="834" rx="8" fill="#fcfcfb"/>
+<text x="16.0" y="26.0" font-size="16" fill="#0b0b0b" text-anchor="start" font-weight="600">With 500 guests running: operations and the daemon at rest</text>
+<text x="16.0" y="46.0" font-size="12.5" fill="#52514e" text-anchor="start" font-weight="normal">Dual-socket AMD EPYC 7443, XCP-ng 8.3 (Xen 4.17), 500 guests running.</text>
+<text x="16.0" y="63.0" font-size="12.5" fill="#52514e" text-anchor="start" font-weight="normal">oxenstored (XAPI) ran on a second server of the same model.</text>
+<text x="16.0" y="80.0" font-size="12.5" fill="#52514e" text-anchor="start" font-weight="normal">Operations: mean of 3 rounds. Each group has its own scale. Lower is better.</text>
+<rect x="16" y="92" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="31.0" y="101.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17)</text>
+<rect x="204.20000000000002" y="92" width="10" height="10" rx="2" fill="#8f3d12"/>
+<text x="219.2" y="101.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="normal">oxenstored (XAPI)</text>
+<rect x="363.6" y="92" width="10" height="10" rx="2" fill="#18a673"/>
+<text x="378.6" y="101.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="normal">C xenstored</text>
+<rect x="479.8" y="92" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="494.8" y="101.0" font-size="12" fill="#52514e" text-anchor="start" font-weight="normal">rxenstored</text>
+<text x="16.0" y="132.0" font-size="13" fill="#0b0b0b" text-anchor="start" font-weight="600">Reboot 25 guests</text>
+<line x1="16.0" y1="138" x2="16.0" y2="216" stroke="#e4e3df" stroke-width="1"/>
+<text x="16.0" y="229.0" font-size="10.5" fill="#52514e" text-anchor="start" font-weight="normal">0 s</text>
+<line x1="120.9" y1="138" x2="120.9" y2="216" stroke="#e4e3df" stroke-width="1"/>
+<text x="120.9" y="229.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">50 s</text>
+<line x1="225.8" y1="138" x2="225.8" y2="216" stroke="#e4e3df" stroke-width="1"/>
+<text x="225.8" y="229.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">100 s</text>
+<line x1="330.7" y1="138" x2="330.7" y2="216" stroke="#e4e3df" stroke-width="1"/>
+<text x="330.7" y="229.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">150 s</text>
+<line x1="435.6" y1="138" x2="435.6" y2="216" stroke="#e4e3df" stroke-width="1"/>
+<text x="435.6" y="229.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">200 s</text>
+<path d="M16.0,140.0 H383.8 Q387.8,140.0 387.8,144.0 V152.0 Q387.8,156.0 383.8,156.0 H16.0 Z" fill="#eb6834"><title>Reboot 25 guests: oxenstored (Xen 4.17) 177 s (daemon CPU 174 s)</title></path>
+<text x="393.8" y="152.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17) 177 s (daemon CPU 174 s)</text>
+<path d="M16.0,159.0 H138.2 Q142.2,159.0 142.2,163.0 V171.0 Q142.2,175.0 138.2,175.0 H16.0 Z" fill="#8f3d12"><title>Reboot 25 guests: oxenstored (XAPI) 60.2 s (daemon CPU 44.1 s)</title></path>
+<text x="148.2" y="171.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (XAPI) 60.2 s (daemon CPU 44.1 s)</text>
+<path d="M16.0,178.0 H233.4 Q237.4,178.0 237.4,182.0 V190.0 Q237.4,194.0 233.4,194.0 H16.0 Z" fill="#18a673"><title>Reboot 25 guests: C xenstored 106 s (daemon CPU 98.3 s)</title></path>
+<text x="243.4" y="190.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">C xenstored 106 s (daemon CPU 98.3 s)</text>
+<path d="M16.0,197.0 H106.5 Q110.5,197.0 110.5,201.0 V209.0 Q110.5,213.0 106.5,213.0 H16.0 Z" fill="#2a78d6"><title>Reboot 25 guests: rxenstored 45.0 s (daemon CPU 5.00 s)</title></path>
+<text x="116.5" y="209.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">rxenstored 45.0 s (daemon CPU 5.00 s)</text>
+<text x="16.0" y="264.0" font-size="13" fill="#0b0b0b" text-anchor="start" font-weight="600">Suspend and resume 25 guests</text>
+<line x1="16.0" y1="270" x2="16.0" y2="348" stroke="#e4e3df" stroke-width="1"/>
+<text x="16.0" y="361.0" font-size="10.5" fill="#52514e" text-anchor="start" font-weight="normal">0 s</text>
+<line x1="120.9" y1="270" x2="120.9" y2="348" stroke="#e4e3df" stroke-width="1"/>
+<text x="120.9" y="361.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">50 s</text>
+<line x1="225.8" y1="270" x2="225.8" y2="348" stroke="#e4e3df" stroke-width="1"/>
+<text x="225.8" y="361.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">100 s</text>
+<line x1="330.7" y1="270" x2="330.7" y2="348" stroke="#e4e3df" stroke-width="1"/>
+<text x="330.7" y="361.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">150 s</text>
+<line x1="435.6" y1="270" x2="435.6" y2="348" stroke="#e4e3df" stroke-width="1"/>
+<text x="435.6" y="361.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">200 s</text>
+<path d="M16.0,272.0 H322.2 Q326.2,272.0 326.2,276.0 V284.0 Q326.2,288.0 322.2,288.0 H16.0 Z" fill="#eb6834"><title>Suspend and resume 25 guests: oxenstored (Xen 4.17) 148 s (daemon CPU 142 s)</title></path>
+<text x="332.2" y="284.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17) 148 s (daemon CPU 142 s)</text>
+<path d="M16.0,291.0 H163.8 Q167.8,291.0 167.8,295.0 V303.0 Q167.8,307.0 163.8,307.0 H16.0 Z" fill="#8f3d12"><title>Suspend and resume 25 guests: oxenstored (XAPI) 72.4 s (daemon CPU 45.7 s)</title></path>
+<text x="173.8" y="303.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (XAPI) 72.4 s (daemon CPU 45.7 s)</text>
+<path d="M16.0,310.0 H248.0 Q252.0,310.0 252.0,314.0 V322.0 Q252.0,326.0 248.0,326.0 H16.0 Z" fill="#18a673"><title>Suspend and resume 25 guests: C xenstored 112 s (daemon CPU 96.0 s)</title></path>
+<text x="258.0" y="322.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">C xenstored 112 s (daemon CPU 96.0 s)</text>
+<path d="M16.0,329.0 H167.7 Q171.7,329.0 171.7,333.0 V341.0 Q171.7,345.0 167.7,345.0 H16.0 Z" fill="#2a78d6"><title>Suspend and resume 25 guests: rxenstored 74.2 s (daemon CPU 5.48 s)</title></path>
+<text x="177.7" y="341.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">rxenstored 74.2 s (daemon CPU 5.48 s)</text>
+<text x="16.0" y="396.0" font-size="13" fill="#0b0b0b" text-anchor="start" font-weight="600">Unplug and plug the network interface of 25 guests</text>
+<line x1="16.0" y1="402" x2="16.0" y2="480" stroke="#e4e3df" stroke-width="1"/>
+<text x="16.0" y="493.0" font-size="10.5" fill="#52514e" text-anchor="start" font-weight="normal">0 s</text>
+<line x1="120.9" y1="402" x2="120.9" y2="480" stroke="#e4e3df" stroke-width="1"/>
+<text x="120.9" y="493.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">20 s</text>
+<line x1="225.8" y1="402" x2="225.8" y2="480" stroke="#e4e3df" stroke-width="1"/>
+<text x="225.8" y="493.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">40 s</text>
+<line x1="330.7" y1="402" x2="330.7" y2="480" stroke="#e4e3df" stroke-width="1"/>
+<text x="330.7" y="493.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">60 s</text>
+<line x1="435.6" y1="402" x2="435.6" y2="480" stroke="#e4e3df" stroke-width="1"/>
+<text x="435.6" y="493.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">80 s</text>
+<path d="M16.0,404.0 H384.6 Q388.6,404.0 388.6,408.0 V416.0 Q388.6,420.0 384.6,420.0 H16.0 Z" fill="#eb6834"><title>Unplug and plug the network interface of 25 guests: oxenstored (Xen 4.17) 71.0 s (daemon CPU 70.9 s)</title></path>
+<text x="394.6" y="416.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17) 71.0 s (daemon CPU 70.9 s)</text>
+<path d="M16.0,423.0 H90.0 Q94.0,423.0 94.0,427.0 V435.0 Q94.0,439.0 90.0,439.0 H16.0 Z" fill="#8f3d12"><title>Unplug and plug the network interface of 25 guests: oxenstored (XAPI) 14.9 s (daemon CPU 12.4 s)</title></path>
+<text x="100.0" y="435.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (XAPI) 14.9 s (daemon CPU 12.4 s)</text>
+<path d="M16.0,442.0 H174.4 Q178.4,442.0 178.4,446.0 V454.0 Q178.4,458.0 174.4,458.0 H16.0 Z" fill="#18a673"><title>Unplug and plug the network interface of 25 guests: C xenstored 31.0 s (daemon CPU 28.3 s)</title></path>
+<text x="184.4" y="454.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">C xenstored 31.0 s (daemon CPU 28.3 s)</text>
+<path d="M16.0,461.0 H64.3 Q68.3,461.0 68.3,465.0 V473.0 Q68.3,477.0 64.3,477.0 H16.0 Z" fill="#2a78d6"><title>Unplug and plug the network interface of 25 guests: rxenstored 9.96 s (daemon CPU 1.41 s)</title></path>
+<text x="74.3" y="473.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">rxenstored 9.96 s (daemon CPU 1.41 s)</text>
+<text x="16.0" y="528.0" font-size="13" fill="#0b0b0b" text-anchor="start" font-weight="600">xenstore-ls /: wall time per node listed</text>
+<line x1="16.0" y1="534" x2="16.0" y2="612" stroke="#e4e3df" stroke-width="1"/>
+<text x="16.0" y="625.0" font-size="10.5" fill="#52514e" text-anchor="start" font-weight="normal">0 ms</text>
+<line x1="120.9" y1="534" x2="120.9" y2="612" stroke="#e4e3df" stroke-width="1"/>
+<text x="120.9" y="625.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">2 ms</text>
+<line x1="225.8" y1="534" x2="225.8" y2="612" stroke="#e4e3df" stroke-width="1"/>
+<text x="225.8" y="625.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">4 ms</text>
+<line x1="330.7" y1="534" x2="330.7" y2="612" stroke="#e4e3df" stroke-width="1"/>
+<text x="330.7" y="625.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">6 ms</text>
+<line x1="435.6" y1="534" x2="435.6" y2="612" stroke="#e4e3df" stroke-width="1"/>
+<text x="435.6" y="625.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">8 ms</text>
+<path d="M16.0,536.0 H354.9 Q358.9,536.0 358.9,540.0 V548.0 Q358.9,552.0 354.9,552.0 H16.0 Z" fill="#eb6834"><title>xenstore-ls /: wall time per node listed: oxenstored (Xen 4.17) 6.54 ms (119,619 nodes)</title></path>
+<text x="364.9" y="548.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17) 6.54 ms (119,619 nodes)</text>
+<path d="M16.0,555.0 H95.9 Q99.9,555.0 99.9,559.0 V567.0 Q99.9,571.0 95.9,571.0 H16.0 Z" fill="#8f3d12"><title>xenstore-ls /: wall time per node listed: oxenstored (XAPI) 1.60 ms (158,054 nodes)</title></path>
+<text x="105.9" y="567.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (XAPI) 1.60 ms (158,054 nodes)</text>
+<path d="M16.0,574.0 H94.1 Q98.1,574.0 98.1,578.0 V586.0 Q98.1,590.0 94.1,590.0 H16.0 Z" fill="#18a673"><title>xenstore-ls /: wall time per node listed: C xenstored 1.56 ms (158,052 nodes)</title></path>
+<text x="104.1" y="586.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">C xenstored 1.56 ms (158,052 nodes)</text>
+<path d="M16.0,593.0 H21.4 Q25.4,593.0 25.4,597.0 V605.0 Q25.4,609.0 21.4,609.0 H16.0 Z" fill="#2a78d6"><title>xenstore-ls /: wall time per node listed: rxenstored 0.180 ms (119,544 nodes)</title></path>
+<text x="31.4" y="605.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">rxenstored 0.180 ms (119,544 nodes)</text>
+<text x="16.0" y="660.0" font-size="13" fill="#0b0b0b" text-anchor="start" font-weight="600">Daemon CPU while idle, per 60 s</text>
+<line x1="16.0" y1="666" x2="16.0" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="16.0" y="757.0" font-size="10.5" fill="#52514e" text-anchor="start" font-weight="normal">0 s</text>
+<line x1="99.9" y1="666" x2="99.9" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="99.9" y="757.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">5 s</text>
+<line x1="183.8" y1="666" x2="183.8" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="183.8" y="757.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">10 s</text>
+<line x1="267.8" y1="666" x2="267.8" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="267.8" y="757.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">15 s</text>
+<line x1="351.7" y1="666" x2="351.7" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="351.7" y="757.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">20 s</text>
+<line x1="435.6" y1="666" x2="435.6" y2="744" stroke="#e4e3df" stroke-width="1"/>
+<text x="435.6" y="757.0" font-size="10.5" fill="#52514e" text-anchor="middle" font-weight="normal">25 s</text>
+<path d="M16.0,668.0 H367.0 Q371.0,668.0 371.0,672.0 V680.0 Q371.0,684.0 367.0,684.0 H16.0 Z" fill="#eb6834"><title>Daemon CPU while idle, per 60 s: oxenstored (Xen 4.17) 21.1 s</title></path>
+<text x="377.0" y="680.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (Xen 4.17) 21.1 s</text>
+<path d="M16.0,687.0 H105.3 Q109.3,687.0 109.3,691.0 V699.0 Q109.3,703.0 105.3,703.0 H16.0 Z" fill="#8f3d12"><title>Daemon CPU while idle, per 60 s: oxenstored (XAPI) 5.56 s</title></path>
+<text x="115.3" y="699.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">oxenstored (XAPI) 5.56 s</text>
+<path d="M16.0,706.0 H105.2 Q109.2,706.0 109.2,710.0 V718.0 Q109.2,722.0 105.2,722.0 H16.0 Z" fill="#18a673"><title>Daemon CPU while idle, per 60 s: C xenstored 5.55 s</title></path>
+<text x="115.2" y="718.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">C xenstored 5.55 s</text>
+<path d="M16.0,725.0 H24.1 Q28.1,725.0 28.1,729.0 V737.0 Q28.1,741.0 24.1,741.0 H16.0 Z" fill="#2a78d6"><title>Daemon CPU while idle, per 60 s: rxenstored 0.72 s</title></path>
+<text x="34.1" y="737.0" font-size="11.5" fill="#0b0b0b" text-anchor="start" font-weight="normal">rxenstored 0.72 s</text>
+<text x="16.0" y="786.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="normal">xenstore-ls, read after the cycle: per node, because the listings differ. oxenstored (XAPI) and C xenstored answer a</text>
+<text x="16.0" y="804.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="normal">long directory with E2BIG and xenstore-ls pages on through the whole store; with the other two it stops at /vm. Single</text>
+<text x="16.0" y="822.0" font-size="11.5" fill="#52514e" text-anchor="start" font-weight="normal">runs.</text>
+</svg>
