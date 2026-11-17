@@ -76,18 +76,19 @@ const DEFAULT: Quotas = Quotas {
 };
 
 /// The seeds and steps of a test: its own, or fewer for a slow run (Miri,
-/// a sanitizer): `XS_MODEL_SEEDS=N` runs its first N seeds,
-/// `XS_MODEL_STEPS=N` N steps each. A reduced run still checks that the
-/// core and the model agree, but not the counts at the end of each test,
-/// which check that the full run's sequences reach every outcome.
+/// a sanitizer), or more for a longer one: `XS_MODEL_SEEDS=N` runs N seeds
+/// from its first, `XS_MODEL_STEPS=N` N steps each. A run with fewer
+/// seeds or other steps still checks that the core and the model agree,
+/// but not the counts at the end of each test, which check that the full
+/// run's sequences reach every outcome.
 fn budget(seeds: std::ops::Range<u64>, steps: usize) -> (std::ops::Range<u64>, usize, bool) {
     let var = |name: &str| std::env::var(name).ok().map(|v| v.parse::<u64>().expect(name));
     let (n, s) = (var("XS_MODEL_SEEDS"), var("XS_MODEL_STEPS"));
-    let end = n.map_or(seeds.end, |n| seeds.end.min(seeds.start + n));
+    let end = n.map_or(seeds.end, |n| seeds.start + n);
     (
         seeds.start..end,
         s.map_or(steps, |s| s as usize),
-        n.is_none() && s.is_none(),
+        end >= seeds.end && s.is_none(),
     )
 }
 
@@ -193,6 +194,40 @@ fn a_commit_after_a_write_of_the_same_value_runs_its_requests_again() {
         (2, MsgType::TransactionEnd, 1, b"T\0"),
     ]);
     assert_eq!(got, [(MsgType::Error as u32, 5, 1, b"EAGAIN\0".to_vec())]);
+}
+
+/// A transaction makes `/e/m`, which another connection writes before the
+/// commit: run again, the MKDIR changes nothing, and the commit fires for
+/// it all the same (`ox/process.ml:60-72, 567`); before its reply, root
+/// first, each path's watches newest first (`ox/connections.ml:138, 165`).
+#[test]
+fn a_commit_run_again_fires_for_its_requests_as_they_ran() {
+    let got = script(&[
+        (1, MsgType::Watch, 0, b"/e\0old\0"),
+        (1, MsgType::Watch, 0, b"/\0root\0"),
+        (1, MsgType::Watch, 0, b"/e\0new\0"),
+        (1, MsgType::TransactionStart, 0, b"\0"),
+        (1, MsgType::Mkdir, 1, b"/e/m\0"),
+        (0, MsgType::Write, 0, b"/e/m\0v"),
+        (1, MsgType::TransactionEnd, 1, b"T\0"),
+    ]);
+    let ev = |t: &str| {
+        (
+            MsgType::WatchEvent as u32,
+            0,
+            0,
+            [&b"/e/m\0"[..], t.as_bytes(), b"\0"].concat(),
+        )
+    };
+    assert_eq!(
+        got,
+        [
+            ev("root"),
+            ev("new"),
+            ev("old"),
+            (MsgType::TransactionEnd as u32, 6, 1, b"OK\0".to_vec())
+        ]
+    );
 }
 
 /// Seeds for the fuzz target `core_vs_model` (fuzz/): the choices of the

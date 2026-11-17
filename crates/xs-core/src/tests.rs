@@ -323,6 +323,24 @@ fn events(out: &[(ConnId, Out)]) -> Vec<(ConnId, String, String)> {
     v
 }
 
+/// The watch events of connection `c` in an output, in the order it got
+/// them, as (path, token).
+fn events_of(out: &[(ConnId, Out)], c: ConnId) -> Vec<(String, String)> {
+    out.iter()
+        .filter(|(id, m)| *id == c && m.0 == ty(MsgType::WatchEvent))
+        .map(|(_, m)| {
+            let s = String::from_utf8(m.3.clone()).unwrap();
+            let f: Vec<&str> = s.split('\0').collect();
+            (f[0].to_string(), f[1].to_string())
+        })
+        .collect()
+}
+
+/// The tokens of `events_of`.
+fn tokens_of(out: &[(ConnId, Out)], c: ConnId) -> Vec<String> {
+    events_of(out, c).into_iter().map(|e| e.1).collect()
+}
+
 fn ev(c: ConnId, p: &str, t: &str) -> (ConnId, String, String) {
     (c, p.into(), t.into())
 }
@@ -1313,6 +1331,171 @@ fn commit_events_come_before_the_reply() {
     assert_eq!(out.len(), 2);
     assert_eq!(out[0].1 .0, ty(MsgType::WatchEvent));
     assert_eq!(out[1].1 .0, ty(MsgType::TransactionEnd));
+}
+
+#[test]
+fn one_change_fires_a_connection_s_watches_root_first_each_path_s_newest_first() {
+    // `ox/connections.ml:138, 165`, `ox/trie.ml:129-137`.
+    let mut h = H::new();
+    let (a, b) = (h.core.open(), h.core.open());
+    h.watch(a, "/x/y", "node-old");
+    h.watch(b, "/x/y", "other");
+    h.watch(a, "/x", "parent");
+    h.watch(a, "/x/y", "node-new");
+    h.watch(a, "/", "root");
+    h.watch(a, "/x/y/z", "below");
+    let out = h.raw(b, ty(MsgType::Write), 0, &wr("/x/y", "1"));
+    assert_eq!(tokens_of(&out, a), ["root", "parent", "node-new", "node-old"]);
+    assert_eq!(tokens_of(&out, b), ["other"]);
+    // A watch registered again is the newest.
+    h.ok(a, MsgType::Unwatch, 0, b"/x/y\0node-old\0");
+    h.watch(a, "/x/y", "node-old");
+    let out = h.raw(b, ty(MsgType::Write), 0, &wr("/x/y", "2"));
+    assert_eq!(tokens_of(&out, a), ["root", "parent", "node-old", "node-new"]);
+    // So are a removal's, and a relative watch's.
+    h.watch(a, "/local/domain/0/r", "abs");
+    h.watch(a, "r", "rel");
+    let out = h.raw(b, ty(MsgType::Rm), 0, b"/x\0");
+    assert_eq!(tokens_of(&out, a), ["root", "parent", "node-old", "node-new", "below"]);
+    let out = h.raw(b, ty(MsgType::Write), 0, &wr("/local/domain/0/r/s", "1"));
+    assert_eq!(
+        events_of(&out, a),
+        [
+            ("/local/domain/0/r/s".to_string(), "root".to_string()),
+            ("r/s".to_string(), "rel".to_string()),
+            ("/local/domain/0/r/s".to_string(), "abs".to_string())
+        ]
+    );
+}
+
+#[test]
+fn an_rm_fires_the_watches_below_by_name_each_node_before_what_is_below_it() {
+    // `ox/connections.ml:167`, `ox/trie.ml:73-78`: names in byte order.
+    let mut h = H::new();
+    let (a, b) = (h.core.open(), h.core.open());
+    for p in ["/s/b", "/s/B", "/s/10", "/s/9", "/s/a-", "/s/a/x"] {
+        h.write(a, 0, p, "v");
+    }
+    for (p, t) in [
+        ("/s/b", "b"),
+        ("/s/a/x", "a/x"),
+        ("/s/B", "B"),
+        ("/s/a-", "a-"),
+        ("/s/9", "9"),
+        ("/s/a", "a"),
+        ("/s/10", "10"),
+        ("/s/a", "a-new"),
+        ("/s/q/r/s/t", "missing parent"),
+        ("/s/q/r/u", "missing parent too"),
+        ("/s/q", "q"),
+        ("/s", "s"),
+    ] {
+        h.watch(a, p, t);
+    }
+    h.watch(b, "/s/a/x", "other");
+    let order = ["s", "10", "9", "B", "a-new", "a", "a/x", "a-", "b", "q"];
+    let out = h.raw(b, ty(MsgType::Rm), 0, b"/s\0");
+    assert_eq!(tokens_of(&out, a), order);
+    assert_eq!(tokens_of(&out, b), ["other"]);
+    // The same at a commit, after the events of the requests before (a
+    // WRITE below the node it then removes: checked against the store
+    // after the commit, where its parent is gone, it fires nothing).
+    for p in ["/s/b", "/s/B", "/s/10", "/s/9", "/s/a-", "/s/a/x"] {
+        h.write(a, 0, p, "v");
+    }
+    let tx = h.start(b);
+    h.write(b, tx, "/s/9", "w");
+    h.write(b, tx, "/s/10/y", "w");
+    h.ok(b, MsgType::Rm, tx, b"/s/10/y\0");
+    h.ok(b, MsgType::Rm, tx, b"/s\0");
+    let out = h.raw(b, ty(MsgType::TransactionEnd), tx, b"T\0");
+    assert_eq!(tokens_of(&out, a)[..2], ["s", "10"], "the RM of /s/10/y");
+    assert_eq!(tokens_of(&out, a)[2..], order);
+}
+
+#[test]
+fn a_commit_fires_for_each_request_that_changed_the_transaction_when_it_ran() {
+    // `ox/process.ml:60-72, 567`: the paths the transaction recorded as its
+    // requests ran (`ox/transaction.ml:147`), whatever running them again
+    // at the commit changes.
+    let mut h = H::new();
+    let (a, b) = (h.core.open(), h.core.open());
+    h.write(a, 0, "/e/old", "v");
+    h.write(a, 0, "/e/there", "v");
+    h.watch(b, "/e", "t");
+    let tx = h.start(a);
+    h.ok(a, MsgType::Mkdir, tx, b"/e/made\0");
+    h.ok(a, MsgType::Rm, tx, b"/e/old\0");
+    // Changes nothing: no event, now or at the commit.
+    h.ok(a, MsgType::Mkdir, tx, b"/e/there\0");
+    h.ok(a, MsgType::Rm, tx, b"/e/never\0");
+    // Twice, the same value: twice.
+    h.write(a, tx, "/e/w", "1");
+    h.write(a, tx, "/e/w", "1");
+    // Meanwhile another connection makes what the MKDIR made, removes
+    // what the RM removed and what the other MKDIR found: run again, the
+    // first two change nothing and the third makes its node.
+    h.write(b, 0, "/e/made", "v");
+    h.ok(b, MsgType::Rm, 0, b"/e/old\0");
+    h.ok(b, MsgType::Rm, 0, b"/e/there\0");
+    h.drain();
+    let out = h.raw(a, ty(MsgType::TransactionEnd), tx, b"T\0");
+    assert_eq!(out.last().unwrap().1 .3, b"OK\0");
+    let paths: Vec<String> = events_of(&out, b).into_iter().map(|e| e.0).collect();
+    assert_eq!(paths, ["/e/made", "/e/old", "/e/w", "/e/w"]);
+    assert_eq!(h.read(a, 0, "/e/there"), Ok(String::new()), "made again, unannounced");
+}
+
+#[test]
+fn the_watches_of_a_special_path_fire_newest_first() {
+    // `ox/connections.ml:174-177`, `ox/connection.ml:287`.
+    let mut h = H::new();
+    let (a, b) = (h.core.open(), h.core.open());
+    h.watch(a, "@releaseDomain", "old");
+    h.watch(b, "@releaseDomain", "other");
+    h.watch(a, "@releaseDomain", "new");
+    h.drain();
+    h.core.fire_special(b"@releaseDomain");
+    let out = h.drain();
+    assert_eq!(tokens_of(&out, a), ["new", "old"]);
+    assert_eq!(tokens_of(&out, b), ["other"]);
+}
+
+#[test]
+fn a_commit_fires_at_most_one_change_per_request_and_holds_its_source_as_one_request() {
+    // A guest's commit of n requests fires at most n changes, each the
+    // watches on its path and its ancestors (and, for an RM, below): a
+    // guest watcher gets twice `watch_event_max` events, the rest are
+    // dropped; domain 0 gets every one; the guest is held until both read.
+    let (mut h, tool, g) = with_guest(Config {
+        watch_event_max: 4,
+        request_max: Some(50),
+        ..Config::default()
+    });
+    h.write(g, 0, "data", "");
+    h.ok(g, MsgType::SetPerms, 0, b"data\0n5\0r6\0");
+    let sink = h.core.open_domain(6);
+    h.watch(sink, "/local/domain/5/data", "w");
+    h.watch(tool, "/local/domain/5/data", "t");
+    h.drain();
+    let tx = h.start(g);
+    // 49 requests, and the TRANSACTION_END: `request_max`.
+    for i in 0..49 {
+        h.write(g, tx, "data/x", &i.to_string());
+    }
+    // Run again at the commit: the events are the requests' all the same.
+    h.write(tool, 0, "/elsewhere", "v");
+    h.drain();
+    h.push(g, ty(MsgType::TransactionEnd), tx, b"T\0");
+    assert_eq!(h.core.process(g, 10), Status::Blocked);
+    assert_eq!(h.core.conns.map[&sink].out.events, 8);
+    assert_eq!(h.core.conns.map[&tool].out.events, 49);
+    assert_eq!(h.core.conns.dropped, 41);
+    assert_eq!(h.core.conns.map[&g].holds, 2);
+    h.drain_one(sink);
+    assert!(!h.core.wants_input(g), "one to go");
+    h.drain_one(tool);
+    assert!(h.core.wants_input(g));
 }
 
 #[test]

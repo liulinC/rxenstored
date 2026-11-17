@@ -236,6 +236,14 @@ pub fn compare(ox: &Transcript, rx: &Transcript, tolerated: &dyn Fn(&str) -> boo
                     sig,
                     detail,
                 });
+            } else if ar == br {
+                // The same replies and events, interleaved otherwise.
+                push(Diff {
+                    step: Some(step),
+                    conn: Some(conn),
+                    sig: "watch events: same, in another place among the replies".to_string(),
+                    detail,
+                });
             }
         }
     }
@@ -316,6 +324,63 @@ pub fn compare(ox: &Transcript, rx: &Transcript, tolerated: &dyn Fn(&str) -> boo
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn reply(payload: &[u8]) -> Item {
+        Item::Reply {
+            req: Some((11, b"/a\0".to_vec())),
+            ty: 11,
+            req_id: 1,
+            tx: crate::exec::TxSym::Zero,
+            payload: payload.to_vec(),
+        }
+    }
+
+    fn event(payload: &[u8]) -> Item {
+        Item::Event {
+            req_id: 0,
+            tx_id: 0,
+            payload: payload.to_vec(),
+        }
+    }
+
+    fn one_step(items: Vec<Item>) -> Transcript {
+        Transcript {
+            steps: vec![vec![items]],
+            alive: true,
+            ..Transcript::default()
+        }
+    }
+
+    #[test]
+    fn events_are_compared_in_order_and_among_the_replies() {
+        let sigs = |a: Vec<Item>, b: Vec<Item>| -> Vec<String> {
+            compare(&one_step(a), &one_step(b), &|_| false)
+                .into_iter()
+                .map(|d| d.sig)
+                .collect()
+        };
+        let (r, e1, e2) = (reply(b"OK\0"), event(b"/a\0t1\0"), event(b"/a\0t2\0"));
+        assert!(sigs(vec![r.clone(), e1.clone()], vec![r.clone(), e1.clone()]).is_empty());
+        assert_eq!(
+            sigs(
+                vec![r.clone(), e1.clone(), e2.clone()],
+                vec![r.clone(), e2.clone(), e1.clone()]
+            ),
+            ["watch events: same set, other order"]
+        );
+        assert_eq!(
+            sigs(vec![e1.clone(), r.clone()], vec![r.clone(), e1.clone()]),
+            ["watch events: same, in another place among the replies"]
+        );
+        assert_eq!(
+            sigs(vec![r.clone(), e1.clone()], vec![r.clone(), e1.clone(), e1.clone()]),
+            ["watch events differ (ox none not in rx, rx has some not in ox)"]
+        );
+        assert_eq!(
+            sigs(vec![r.clone()], vec![reply(b"EIO\0")]),
+            ["WRITE path: ox OK / rx data"]
+        );
+    }
 
     #[test]
     fn classes_of_paths() {

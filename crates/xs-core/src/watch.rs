@@ -8,7 +8,8 @@
 //!
 //! Compact on purpose: a host has tens of watches per VM. Trie nodes and
 //! watches live in two arrays and are linked by index (children of a node,
-//! watches of a node, both in registration order; watches of a
+//! by name, and watches of a node, newest first, in the order oxenstored
+//! walks them, `ox/trie.ml:73-78`, `ox/connections.ml:138`; watches of a
 //! connection). Two tables of indices find a child by (parent, name) and a
 //! watch by (connection, path, token). A watch does not keep its path: the
 //! trie spells it.
@@ -59,8 +60,8 @@ struct TrieNode {
     last_child: u32,
     prev_sibling: u32,
     next_sibling: u32,
+    /// The newest watch registered here.
     first_watch: u32,
-    last_watch: u32,
     /// Where a walk of the subtree that fires nothing on the way can go
     /// straight to: the end of the chain of single children without
     /// watches below this node (`WatchIndex::down`). NONE: the node itself.
@@ -77,7 +78,6 @@ impl TrieNode {
             prev_sibling: NONE,
             next_sibling: NONE,
             first_watch: NONE,
-            last_watch: NONE,
             down: NONE,
         }
     }
@@ -229,14 +229,24 @@ impl WatchIndex {
         })
     }
 
-    /// The child `name` of `parent`, created (last of its siblings) if missing.
+    /// The child `name` of `parent`, created if missing, in its place
+    /// among its siblings by name: found from the last, so that names that
+    /// come in order cost nothing, others a walk of the siblings after it.
     fn child_or_new(&mut self, parent: u32, name: &Name) -> u32 {
         if let Some(c) = self.child(parent, name) {
             return c;
         }
+        let mut prev = self.tnode(parent).last_child;
+        while prev != NONE && self.tnode(prev).name[..].cmp(&name[..]).is_gt() {
+            prev = self.tnode(prev).prev_sibling;
+        }
+        let next = match prev {
+            NONE => self.tnode(parent).first_child,
+            p => self.tnode(p).next_sibling,
+        };
         let mut node = TrieNode::new(parent, name.clone());
-        node.prev_sibling = self.tnode(parent).last_child;
-        let prev = node.prev_sibling;
+        node.prev_sibling = prev;
+        node.next_sibling = next;
         // A free index is reused (a stale one is dropped).
         let c = match self
             .free_nodes
@@ -256,7 +266,10 @@ impl WatchIndex {
             NONE => self.tnode_mut(parent).first_child = c,
             p => self.tnode_mut(p).next_sibling = c,
         }
-        self.tnode_mut(parent).last_child = c;
+        match next {
+            NONE => self.tnode_mut(parent).last_child = c,
+            n => self.tnode_mut(n).prev_sibling = c,
+        }
         let (nodes, hasher) = (&self.nodes, &self.hasher);
         self.children.insert(hasher.hash_one((parent, &name[..])), c, |i| {
             let n = node_in(nodes, i);
@@ -296,7 +309,7 @@ impl WatchIndex {
             Key::Tree(p) => p.iter().fold(ROOT, |n, name| self.child_or_new(n, name)),
             Key::Special(s) => self.child_or_new(SPECIAL, s),
         };
-        let prev = self.tnode(node).last_watch;
+        let next = self.tnode(node).first_watch;
         let hash = self.owner_hash(conn, node, &token);
         let conn_next = self.heads.get(&conn).copied().unwrap_or(NONE);
         let watch = Some(Watch {
@@ -304,8 +317,8 @@ impl WatchIndex {
             token,
             relative,
             node,
-            prev,
-            next: NONE,
+            prev: NONE,
+            next,
             conn_prev: NONE,
             conn_next,
         });
@@ -323,11 +336,11 @@ impl WatchIndex {
                 (self.watches.len() - 1) as WatchId
             }
         };
-        match prev {
-            NONE => self.tnode_mut(node).first_watch = id,
-            p => self.watch_mut(p).next = id,
+        // First of the node's watches (`ox/connections.ml:138`).
+        if next != NONE {
+            self.watch_mut(next).prev = id;
         }
-        self.tnode_mut(node).last_watch = id;
+        self.tnode_mut(node).first_watch = id;
         self.refresh(node);
         if conn_next != NONE {
             self.watch_mut(conn_next).conn_prev = id;
@@ -368,9 +381,8 @@ impl WatchIndex {
             NONE => self.tnode_mut(w.node).first_watch = w.next,
             p => self.watch_mut(p).next = w.next,
         }
-        match w.next {
-            NONE => self.tnode_mut(w.node).last_watch = w.prev,
-            n => self.watch_mut(n).prev = w.prev,
+        if w.next != NONE {
+            self.watch_mut(w.next).prev = w.prev;
         }
         let kept = self.prune(w.node);
         self.refresh(kept);
@@ -448,7 +460,8 @@ impl WatchIndex {
         n
     }
 
-    /// Watches registered on `path` or on one of its ancestors, root first.
+    /// Watches registered on `path` or on one of its ancestors: root first,
+    /// each path's newest first (`ox/connections.ml:165`, `ox/trie.ml:129-137`).
     pub fn on_path(&self, path: &[Name], out: &mut Vec<WatchId>) {
         let mut n = ROOT;
         out.extend(self.watches_at(n));
@@ -466,17 +479,19 @@ impl WatchIndex {
         path.iter().try_fold(ROOT, |n, name| self.child(n, name))
     }
 
-    /// The children of a trie node with their names, oldest first.
+    /// The children of a trie node with their names, by name (bytes
+    /// compared in order).
     pub fn children(&self, node: u32) -> impl Iterator<Item = (&Name, u32)> {
         chain(self.tnode(node).first_child, |c| self.tnode(c).next_sibling).map(|c| (&self.tnode(c).name, c))
     }
 
-    /// The watches registered at a trie node, oldest first.
+    /// The watches registered at a trie node, newest first.
     pub fn watches_at(&self, node: u32) -> impl Iterator<Item = WatchId> + '_ {
         chain(self.tnode(node).first_watch, |w| self.get(w).next)
     }
 
-    /// The watches on a special path.
+    /// The watches on a special path, newest first: so are each
+    /// connection's (`ox/connections.ml:174-177`, `ox/connection.ml:287`).
     pub fn special(&self, path: &[u8]) -> impl Iterator<Item = WatchId> + '_ {
         self.child(SPECIAL, path).into_iter().flat_map(|n| self.watches_at(n))
     }
@@ -785,13 +800,79 @@ mod tests {
     }
 
     #[test]
+    fn the_children_of_a_node_are_listed_by_name() {
+        let mut ix = WatchIndex::new(SipKey::new([1, 2]));
+        let kids = |ix: &WatchIndex| {
+            let n = ix.node(&p("/s")).unwrap();
+            let names: Vec<String> = ix
+                .children(n)
+                .map(|(k, _)| String::from_utf8(k.to_vec()).unwrap())
+                .collect();
+            // Linked both ways.
+            let mut back = Vec::new();
+            let mut c = ix.tnode(n).last_child;
+            while c != NONE {
+                back.insert(0, String::from_utf8(ix.tnode(c).name.to_vec()).unwrap());
+                c = ix.tnode(c).prev_sibling;
+            }
+            assert_eq!(names, back);
+            names
+        };
+        let mut ids = Vec::new();
+        for name in ["b", "B", "10", "9", "a-", "a", "c", "a/x"] {
+            ids.push(add(&mut ix, 1, &format!("/s/{name}")));
+        }
+        assert_eq!(kids(&ix), ["10", "9", "B", "a", "a-", "b", "c"]);
+        // Removed first, in the middle and last, then made again.
+        for (i, left) in [
+            (2, ["9", "B", "a", "a-", "b", "c"].as_slice()),
+            (4, &["9", "B", "a", "b", "c"]),
+            (6, &["9", "B", "a", "b"]),
+        ] {
+            ix.remove(ids[i]);
+            assert_eq!(kids(&ix), left);
+        }
+        add(&mut ix, 1, "/s/10");
+        add(&mut ix, 1, "/s/c");
+        add(&mut ix, 1, "/s/a-");
+        assert_eq!(kids(&ix), ["10", "9", "B", "a", "a-", "b", "c"]);
+    }
+
+    #[test]
+    fn the_watches_of_a_path_are_listed_newest_first() {
+        let mut ix = WatchIndex::new(SipKey::new([1, 2]));
+        let at = |ix: &WatchIndex| ix.watches_at(ix.node(&p("/a")).unwrap()).collect::<Vec<_>>();
+        let ws: Vec<_> = (0..4).map(|c| add(&mut ix, c, "/a")).collect();
+        let below = add(&mut ix, 9, "/a/b");
+        assert_eq!(at(&ix), [ws[3], ws[2], ws[1], ws[0]]);
+        let mut v = Vec::new();
+        ix.on_path(&p("/a/b"), &mut v);
+        assert_eq!(v, [ws[3], ws[2], ws[1], ws[0], below], "ancestors first");
+        // Removed from the middle, the end and the front; one added again
+        // is the newest.
+        ix.remove(ws[1]);
+        assert_eq!(at(&ix), [ws[3], ws[2], ws[0]]);
+        ix.remove(ws[0]);
+        assert_eq!(at(&ix), [ws[3], ws[2]]);
+        ix.remove(ws[3]);
+        assert_eq!(at(&ix), [ws[2]]);
+        let again = add(&mut ix, 0, "/a");
+        assert_eq!(at(&ix), [again, ws[2]]);
+        ix.remove(ws[2]);
+        ix.remove(again);
+        assert_eq!(ix.watches_at(ix.node(&p("/a")).unwrap()).count(), 0);
+        ix.remove(below);
+        assert_eq!(ix.trie_size(), 1);
+    }
+
+    #[test]
     fn special_paths() {
         let mut ix = WatchIndex::new(SipKey::new([1, 2]));
         let a = add(&mut ix, 1, "@introduceDomain");
         let b = add(&mut ix, 2, "@introduceDomain");
         let c = add(&mut ix, 2, "@releaseDomain");
         let special = |ix: &WatchIndex, s: &[u8]| ix.special(s).collect::<Vec<_>>();
-        assert_eq!(special(&ix, b"@introduceDomain"), [a, b]);
+        assert_eq!(special(&ix, b"@introduceDomain"), [b, a], "newest first");
         assert_eq!(special(&ix, b"@releaseDomain"), [c]);
         assert_eq!(special(&ix, b"@other"), []);
         assert_eq!(ix.path(c), b"@releaseDomain");

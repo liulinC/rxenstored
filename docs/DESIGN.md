@@ -17,6 +17,9 @@ how the daemon is built.
   RECONNECTION ring feature advertised, domain state through Xen 4.17's domctl (interface
   version 0x15).
 - Semantics of every request it serves: permissions, the XSA-115 check of watch events,
+  the watch events each connection gets and their order (a change fires the watches on its
+  path from the root down, each path's newest watch first, and for a removal those below it
+  in name order; a commit fires one change per request its transaction recorded, in order),
   `EQUOTA`, oxenstored 4.17's quotas and conflict credit, transactions re-executed at commit
   when the store changed (a different reply is `EAGAIN`), a level-triggered
   `@releaseDomain`.

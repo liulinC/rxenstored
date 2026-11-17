@@ -67,7 +67,7 @@ pub struct Daemon {
     child: Child,
     pub dir: PathBuf,
     pub socket: PathBuf,
-    /// Keep the directory (logs) when dropped.
+    /// Keep the directory (logs) when dropped: set if `RXS_DIFF_KEEP` is.
     pub keep: bool,
 }
 
@@ -126,7 +126,7 @@ impl Daemon {
             child,
             dir,
             socket,
-            keep: false,
+            keep: std::env::var_os("RXS_DIFF_KEEP").is_some(),
         };
         d.wait_ready()?;
         Ok(d)
@@ -176,6 +176,17 @@ impl Daemon {
 
 impl Drop for Daemon {
     fn drop(&mut self) {
+        // A daemon whose logs are kept is stopped by SIGTERM, so that it
+        // writes out what its logs buffer; KILL if that fails.
+        if self.keep
+            && Command::new("kill")
+                .args(["-TERM", &self.child.id().to_string()])
+                .status()
+                .is_ok_and(|s| s.success())
+        {
+            let _ = self.child.wait();
+            return;
+        }
         let _ = self.child.kill();
         let _ = self.child.wait();
         if !self.keep {

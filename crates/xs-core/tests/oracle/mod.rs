@@ -74,7 +74,9 @@ pub struct MTxn {
     requests: usize,
     /// (type, payload, reply bytes, who made it) of every request.
     log: Vec<(u32, Vec<u8>, Vec<u8>, Who)>,
-    wrote: bool,
+    /// The changes its requests made as they ran in it: what its commit
+    /// fires (`ox/process.ml:60-72`, the paths it recorded).
+    changes: Vec<Change>,
 }
 
 pub struct MConn {
@@ -447,6 +449,11 @@ impl Model {
         }
     }
 
+    /// The events of a change, each connection's in oxenstored's order
+    /// (`ox/connections.ml:152-167`): the watches on the path and on its
+    /// ancestors, the root first, each path's newest first; then, for an
+    /// RM, those below it by path (each component in byte order, a node
+    /// before what is below it), each path's newest first.
     fn fire(&self, change: &Change, out: &mut Vec<(usize, Msg)>) {
         let ev = |path: &[u8], token: &[u8]| (15u32, 0u32, 0u32, [path, b"\0", token, b"\0"].concat());
         let (p, roots): (&P, Vec<&Store>) = match change {
@@ -467,19 +474,28 @@ impl Model {
                 })
         };
         for (ci, c) in self.conns.iter().enumerate() {
-            for w in &c.watches {
-                let Some(k) = &w.key else { continue };
-                if p.starts_with(k) && readable(&roots, p, c.who()) {
-                    let full = show(p);
-                    let shown = if w.relative {
-                        full[c.home().len()..].to_vec()
-                    } else {
-                        full
-                    };
-                    out.push((ci, ev(&shown, &w.token)));
+            let newest_first = || c.watches.iter().rev().filter_map(|w| w.key.as_ref().map(|k| (k, w)));
+            for depth in 0..=p.len() {
+                for (_, w) in newest_first().filter(|(k, _)| k[..] == p[..depth]) {
+                    if readable(&roots, p, c.who()) {
+                        let full = show(p);
+                        let shown = if w.relative {
+                            full[c.home().len()..].to_vec()
+                        } else {
+                            full
+                        };
+                        out.push((ci, ev(&shown, &w.token)));
+                    }
                 }
-                if let Change::Rm(_, before) = change {
-                    if k.len() > p.len() && k.starts_with(p) && readable(&[before], k, c.who()) {
+            }
+            if let Change::Rm(_, before) = change {
+                let mut below: Vec<_> = newest_first()
+                    .filter(|(k, _)| k.len() > p.len() && k.starts_with(p))
+                    .collect();
+                // Stable: a path's watches stay newest first.
+                below.sort_by(|x, y| x.0.cmp(y.0));
+                for (k, w) in below {
+                    if readable(&[before], k, c.who()) {
                         out.push((ci, ev(&w.path, &w.token)));
                     }
                 }
@@ -559,7 +575,7 @@ impl Model {
                         },
                         q.acl_max,
                     );
-                    t.wrote |= !changes.is_empty();
+                    t.changes.extend(changes);
                     t.log.push((ty, payload.to_vec(), enc(&r), who));
                     out.push((ci, reply(r)));
                 }
@@ -634,7 +650,7 @@ impl Model {
                             version: self.version,
                             requests: 0,
                             log: Vec::new(),
-                            wrote: false,
+                            changes: Vec::new(),
                         },
                     );
                     out.push((ci, reply(Ok(format!("{t}\0").into_bytes()))));
@@ -650,9 +666,8 @@ impl Model {
                     None => Err("EINVAL"),
                     Some(commit) => match self.conns[ci].txns.remove(&tid) {
                         None => Err("ENOENT"),
-                        Some(t) if commit && t.wrote => {
+                        Some(t) if commit && !t.changes.is_empty() => {
                             let mut store = self.store.clone();
-                            let mut changes = Vec::new();
                             let mut same = true;
                             let mut replaced = false;
                             // Root not replaced since it started: oxenstored
@@ -671,7 +686,6 @@ impl Model {
                                 let (r, c) =
                                     store_op(&mut store, *ty, payload, who, &home, Ent { max, txn: None }, q.acl_max);
                                 replaced |= replaces(*ty, &before, &store, &c);
-                                changes.extend(c);
                                 if enc(&r) != *recorded {
                                     same = false;
                                     break;
@@ -680,9 +694,11 @@ impl Model {
                             if same {
                                 self.store = store;
                                 self.version += replaced as u64;
-                                // Checked against the store before the
+                                // The changes its requests made as they ran
+                                // in it, whatever running them again changed,
+                                // checked against the store before the
                                 // transaction and the one committed.
-                                for c in changes {
+                                for c in t.changes {
                                     let c = match c {
                                         Change::Normal(p, roots) if roots.len() == 2 => {
                                             Change::Normal(p, vec![t.snapshot.clone(), self.store.clone()])
@@ -879,20 +895,11 @@ pub fn gen_request(rng: &mut impl Source, open: &[u32]) -> (u32, u32, Vec<u8>) {
     (ty as u32, tx, payload)
 }
 
-/// Per connection, messages in order, with each run of consecutive watch
-/// events sorted (their order within one change is not specified).
+/// Per connection, messages in order, watch events included.
 pub fn normalise(msgs: Vec<(usize, Msg)>, conns: usize) -> Vec<Vec<Msg>> {
     let mut per: Vec<Vec<Msg>> = vec![Vec::new(); conns];
     for (c, m) in msgs {
         per[c].push(m);
-    }
-    for v in &mut per {
-        let mut i = 0;
-        while i < v.len() {
-            let j = (i..v.len()).find(|&j| v[j].0 != 15).unwrap_or(v.len());
-            v[i..j].sort();
-            i = j + 1;
-        }
     }
     per
 }

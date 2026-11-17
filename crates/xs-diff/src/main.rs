@@ -251,6 +251,9 @@ fn run_seeds(out: &mut impl Write, pair: &Pair, a: &Args) -> ExitCode {
     let mut clean = 0u64;
     let mut known_only = 0u64;
     let mut left_out: BTreeMap<String, u64> = BTreeMap::new();
+    // Per signature, the sequences whose first operation that differs
+    // has it (left out or not; at the end: a difference at the end only).
+    let mut first: BTreeMap<String, u64> = BTreeMap::new();
     let mut errors = 0u64;
     std::thread::scope(|s| {
         for _ in 0..a.jobs {
@@ -292,6 +295,17 @@ fn run_seeds(out: &mut impl Write, pair: &Pair, a: &Args) -> ExitCode {
                 .filter_map(|d| d.step)
                 .min();
             let all = diffs.len();
+            let at = diffs.iter().map(|d| d.step.unwrap_or(usize::MAX)).min();
+            let mut at_first: Vec<&str> = diffs
+                .iter()
+                .filter(|d| Some(d.step.unwrap_or(usize::MAX)) == at)
+                .map(|d| d.sig.as_str())
+                .collect();
+            at_first.sort_unstable();
+            at_first.dedup();
+            for sig in at_first {
+                *first.entry(sig.to_string()).or_insert(0) += 1;
+            }
             let mut left: Vec<&str> = diffs.iter().filter(|d| tol(&d.sig)).map(|d| d.sig.as_str()).collect();
             left.sort_unstable();
             left.dedup();
@@ -382,6 +396,17 @@ fn run_seeds(out: &mut impl Write, pair: &Pair, a: &Args) -> ExitCode {
     }
     for (sig, e) in &seen {
         let _ = writeln!(out, "  {:5} seeds  {sig}  (e.g. seed {})", e.seeds, e.example);
+    }
+    let _ = writeln!(
+        out,
+        "== first differences (the signatures of each sequence's first operation that differs)"
+    );
+    for (sig, n) in &first {
+        let _ = writeln!(
+            out,
+            "  {n:5} seeds  {sig}{}",
+            if tol(sig) { "  (left out)" } else { "" }
+        );
     }
     if seen.is_empty() && errors == 0 {
         ExitCode::SUCCESS

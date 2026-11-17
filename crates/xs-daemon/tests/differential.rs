@@ -49,8 +49,6 @@ CONTROL trim: ox data / rx OK
 IS_DOMAIN_INTRODUCED: ox EIO / rx EINVAL
 # Transaction ids: a commit that had to be re-executed uses one up there.
 TRANSACTION_START: ids numbered differently
-# The order of the events one change sends to several watches of one connection.
-watch events: same set, other order
 # Commit: merged by the lowest paths read and written there, re-executed here;
 # each refuses some commits the other makes.
 TRANSACTION_END T: ox OK / rx EAGAIN
@@ -155,7 +153,6 @@ fn a_commit_that_was_re_executed_uses_up_a_transaction_id() {
 }
 
 #[test]
-#[ignore = "differs from oxenstored: the oldest watch fires first here"]
 fn one_change_fires_the_watches_of_one_connection_newest_first() {
     let (d, mut c) = client();
     let mut w = d.client();
@@ -167,6 +164,26 @@ fn one_change_fires_the_watches_of_one_connection_newest_first() {
     w.wait_events(6);
     let tokens: Vec<&str> = w.events[3..].iter().map(|(_, t)| t.as_str()).collect();
     assert_eq!(tokens, ["third", "second", "first"]);
+}
+
+#[test]
+fn a_commit_run_again_fires_for_a_mkdir_that_made_its_node_when_it_ran() {
+    let (d, mut c) = client();
+    let mut other = d.client();
+    let mut w = d.client();
+    w.watch("/e", "t");
+    w.wait_events(1);
+    let t = c.start();
+    c.ok(MsgType::Mkdir, t, &z(&["/e/m"]));
+    other.write(0, "/e/m", "v");
+    w.wait_events(2);
+    c.end(t, true).unwrap();
+    // Barrier: the events of the commit came before this reply.
+    w.ok(MsgType::Read, 0, &z(&["/e/m"]));
+    assert_eq!(
+        w.events,
+        [("/e", "t"), ("/e/m", "t"), ("/e/m", "t")].map(|(p, t)| (p.into(), t.into()))
+    );
 }
 
 #[test]

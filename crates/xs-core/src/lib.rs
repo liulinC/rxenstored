@@ -755,6 +755,25 @@ fn watch_perms<'a>(roots: impl Iterator<Item = &'a Node>, path: &[Name]) -> Vec<
     out
 }
 
+/// Pushes the children of the trie node `tn` on the stack of an RM's walk
+/// (`Core::dispatch`), the first by name on top, each with its name and
+/// `store_node`, the store node of `tn` in the version the RM looks at.
+fn push_children<'a>(
+    index: &'a WatchIndex,
+    stack: &mut Vec<(&'a Name, u32, Option<&'a Node>)>,
+    tn: u32,
+    store_node: Option<&'a Node>,
+) {
+    // Below what the store had, no watch on the way down a chain of
+    // single children fires or is looked at: go to its end (same
+    // watches, same order).
+    let tn = if store_node.is_none() { index.down(tn) } else { tn };
+    let first = stack.len();
+    stack.extend(index.children(tn).map(|(name, c)| (name, c, store_node)));
+    // Listed by name: the first goes last.
+    stack.get_mut(first..).unwrap_or_default().reverse();
+}
+
 /// `Perms.can_fire_watch`: some of those permissions let the watcher
 /// read, or watches are not checked (`ox/perms.ml:179-181`).
 fn can_fire(cfg: &Config, conn: &Conn, perms: &[&Perms]) -> bool {
@@ -1612,37 +1631,35 @@ impl Core {
         }
         if change.kind == ChangeKind::Rm {
             // Watches below a removed node fire with their own path, if
-            // their parent existed (`ox/connections.ml:165-166`).
+            // their parent existed (`ox/connections.ml:165-166`): in the
+            // order of a walk of the watch trie below the node, a node
+            // before what is below it, children by name
+            // (`ox/trie.ml:73-78`, a map ordered by name).
             let Some(top) = self.index.node(&change.path) else {
                 return;
             };
             // An RM keeps the old version (`store::run`); without it, the
             // node would be taken as missing, and nothing below it fire.
-            let mut stack = vec![(
-                top,
-                change.before.as_deref().and_then(|before| lookup(before, &change.path)),
-            )];
-            while let Some((tn, store_node)) = stack.pop() {
-                // Below what the store had, no watch on the way down a
-                // chain of single children fires or is looked at: go to
-                // its end (same watches, same order).
-                let tn = if store_node.is_none() { self.index.down(tn) } else { tn };
-                for (name, child) in self.index.children(tn) {
-                    let child_node = store_node.and_then(|n| n.child(name));
-                    let perms: Vec<&Perms> = store_node.into_iter().chain(child_node).map(|n| &*n.perms).collect();
-                    for wid in self.index.watches_at(child) {
-                        let w = self.index.get(wid);
-                        if let Some(c) = self.conns.map.get(&w.conn).filter(|c| {
-                            self.conns.fires(can_fire(&self.cfg, c, &perms), w.conn, c, &perms, || {
-                                self.index.path(wid)
-                            })
-                        }) {
-                            let p = own_path(&self.index, wid, c);
-                            self.conns.event(w.conn, Some(source), &p, &w.token);
-                        }
+            let top_node = change.before.as_deref().and_then(|before| lookup(before, &change.path));
+            // Trie nodes to visit, the next on top, each with its name and
+            // the store node of its parent.
+            let mut stack = Vec::new();
+            push_children(&self.index, &mut stack, top, top_node);
+            while let Some((name, tn, parent)) = stack.pop() {
+                let store_node = parent.and_then(|n| n.child(name));
+                let perms: Vec<&Perms> = parent.into_iter().chain(store_node).map(|n| &*n.perms).collect();
+                for wid in self.index.watches_at(tn) {
+                    let w = self.index.get(wid);
+                    if let Some(c) = self.conns.map.get(&w.conn).filter(|c| {
+                        self.conns.fires(can_fire(&self.cfg, c, &perms), w.conn, c, &perms, || {
+                            self.index.path(wid)
+                        })
+                    }) {
+                        let p = own_path(&self.index, wid, c);
+                        self.conns.event(w.conn, Some(source), &p, &w.token);
                     }
-                    stack.push((child, child_node));
                 }
+                push_children(&self.index, &mut stack, tn, store_node);
             }
         }
     }
@@ -1821,13 +1838,11 @@ impl Core {
         } = txn;
         if commit && log.iter().any(|e| e.fired.is_some()) {
             let before = self.root.clone();
-            // The changes to fire: their kind and their request.
-            let changes: Vec<(ChangeKind, &txlog::Entry)> = if Arc::ptr_eq(&self.root, &snapshot) {
+            if Arc::ptr_eq(&self.root, &snapshot) {
                 // Nothing committed since the snapshot (so the counts are
                 // the snapshot's): publish the transaction's version as it is.
                 self.root = tree;
                 self.entries.apply(delta);
-                log.iter().filter_map(|e| e.fired.map(|k| (k, e))).collect()
             } else {
                 drop(tree);
                 // Re-execute every request on the current store, quotas
@@ -1835,35 +1850,35 @@ impl Core {
                 // (`ox/process.ml:473-501`).
                 let mut tree = self.root.clone();
                 let mut delta = Delta::default();
-                let mut changes = Vec::new();
                 for e in &log {
                     let mut acct = Acct::Txn(&self.entries, &mut delta);
-                    let (outcome, fired) = execute_in(&mut tree, &mut self.gen, &e.op(), &ctx, &mut acct);
+                    let (outcome, _) = execute_in(&mut tree, &mut self.gen, &e.op(), &ctx, &mut acct);
                     if !e.same_reply(&outcome) {
                         self.conns.log_txn(id, tid, log::Op::Conflict);
                         self.blame(id, &log, started, &ctx);
                         self.conflicts.end(started);
                         return Err(Errno::EAGAIN);
                     }
-                    changes.extend(fired.map(|k| (k, e)));
                 }
                 self.root = tree;
                 self.entries.apply(delta);
-                changes
-            };
+            }
             self.conns.log_txn(id, tid, log::Op::Commit);
             // Recorded after the end, as `ox/process.ml:544-555` does.
             self.conflicts.end(started);
             if self.wants_record(peer) {
                 self.conflicts.record(id, before, &self.root);
             }
-            // oxenstored queues the events before the reply (`ox/process.ml:567-569`),
-            // each checked against the store before the transaction and
-            // after it, not as the requests before it left it (XSA-115:
-            // `4.17 ox/process.ml:60-72`). There "after" is the
-            // transaction's own version even when it was run again; here
-            // it is what was committed.
-            for (kind, e) in changes {
+            // oxenstored queues the events before the reply (`ox/process.ml:567-569`):
+            // one change per request that changed the transaction's version
+            // when it ran there, in the order they ran, whatever running
+            // them again changed (`ox/process.ml:60-72`, the paths the
+            // transaction recorded, `ox/transaction.ml:147`). Each is
+            // checked against the store before the transaction and after
+            // it, not as the requests before it left it (XSA-115). There
+            // "after" is the transaction's own version even when it was
+            // run again; here it is what was committed.
+            for (kind, e) in log.iter().filter_map(|e| e.fired.map(|k| (k, e))) {
                 let c = Change {
                     path: e.path(),
                     kind,

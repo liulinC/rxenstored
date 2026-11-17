@@ -87,10 +87,13 @@ machine without Xen, through its Unix socket): about 8,400 seeded random sequenc
 requests each, on three connections, covering every request type a socket can send, malformed
 and over-long ones included; each reply, each connection's watch events and the final store
 were compared. Every difference was triaged: 3 are documented differences
-([`DESIGN.md`](DESIGN.md)), 2 were bugs of rxenstored in debug and display output (fixed), 11
-are behaviours of oxenstored that rxenstored does not copy (reply text, event order and count,
-transaction numbering, malformed input, requests only dom0 may send), and 5 were artefacts of
-the test. Guests were not simulated: what depends on the caller being a guest (its quotas,
+([`DESIGN.md`](DESIGN.md)), 2 were bugs of rxenstored in debug and display output (fixed), 2
+were behaviours of oxenstored that rxenstored then adopted (the order of the watch events one
+change sends to a connection, and the events of a commit whose requests had to be run again),
+9 are behaviours of oxenstored that rxenstored does not copy (reply text, transaction
+numbering, malformed input, requests only dom0 may send), and 5 were artefacts of the test.
+After the change, 1,200 more sequences showed no difference in watch events, their order
+included. Guests were not simulated: what depends on the caller being a guest (its quotas,
 permissions, watch filtering, conflict credit) was not compared side by side. Nothing was
 compared with C xenstored.
 Real Xen is exercised only by hand: `crates/xs-sys/examples/xen_probe.rs` checks the Xen
