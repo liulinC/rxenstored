@@ -66,9 +66,11 @@ xenstored. With 500 guests, oxenstored (XAPI) used about half of C xenstored's d
   it; the others wrote the host's access log.
 - **rxenstored** was an earlier build, before the no-panic lints, the `no_std` core (a
   synthetic before-and-after run showed no CPU difference), two fixes (access-log loss
-  accounting, back-off on failed accepts) and the changes for this publication. Of the
-  benchmarks, only the 40-guest one was run again on the published code, once: 5.15 s of
-  daemon CPU for the 40 starts against the measured build's 5.25 s, and no operation failed.
+  accounting, back-off on failed accepts) and the changes since. Of the benchmarks, only the
+  40-guest one was run again on the 4-core Intel host, once on each later build: 5.15 s of
+  daemon CPU for the 40 starts on the code first published and 5.09 s on the current code,
+  against the measured build's 5.25 s; every other phase within the spread of the earlier
+  runs, memory equal or lower, and no operation failed.
 - **oxenstored (Xen 4.17) was not fresh**: 8.2 MB resident before the EPYC ramp after two
   trial runs (the others: 0.9 to 2.1 MB); on the Intel host, 130.7 MB and 478 more nodes
   left by earlier runs.
