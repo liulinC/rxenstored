@@ -59,9 +59,12 @@ against the model of oxenstored's behaviour; the ring; the wire decoder; the con
 file; the command line; the log formatter. Before the campaign, 12 bugs were planted one at a
 time (quota off by one, a skipped permission check, a ring index wrap, an unescaped log
 byte…): each was found by a target that could see it, the slowest in 240 s. A first campaign
-of about 3 CPU-hours and 28 million executions (2026-11-17) found one bug in the daemon, in
-the accounting of queued watch events, now fixed with a regression test, and one error in the
-model, where the daemon did as oxenstored does; no crash, hang or memory error. That is hours,
+of one night (2026-11-17) on a shared 4-core VM: about 14 process-hours and 131 million
+executions (the core with invariants 6.4 h, the core against the model 2.4 h, the ring under
+AddressSanitizer 2.7 h, the four others 1.9 h). It found one bug in the daemon, in the
+accounting of queued watch events, now fixed with a regression test, and one error in the
+model, where the daemon did as oxenstored does; no crash, hang or memory error. The last 5.5
+hours ran on that morning's code; what was merged after it has not been fuzzed. That is hours,
 not the weeks a fuzzing campaign should run.
 
 **Miri** (`scripts/miri.sh`), which detects undefined behaviour in the code it runs, runs the

@@ -173,6 +173,13 @@ impl Daemon {
         fields[11].parse::<u64>().unwrap() + fields[12].parse::<u64>().unwrap()
     }
 
+    /// CPU time the loop's thread has used, in nanoseconds (schedstat).
+    #[allow(dead_code)] // tests/wakeups.rs
+    pub fn cpu_ns(&self) -> u64 {
+        let s = std::fs::read_to_string(self.task.join("schedstat")).unwrap();
+        s.split_whitespace().next().unwrap().parse().unwrap()
+    }
+
     /// Waits until the loop's thread sleeps in epoll_wait, and returns the
     /// timeout it sleeps with, in ms (-1: none), as /proc shows the call:
     /// what the loop waits for, read rather than timed.
