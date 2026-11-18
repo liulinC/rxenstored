@@ -105,7 +105,9 @@ fn dom0_is_there_from_the_start() {
     assert_eq!(hv.domains(), [0]);
     let info = hv.domain(0).unwrap();
     assert_eq!(xen.domain_state(0).unwrap(), DomainState::Running);
-    let (page, port) = xen.dom0_ring().unwrap();
+    let r = xen.dom0_ring().unwrap();
+    let (page, port) = (r.page, r.port);
+    assert!(matches!(r.source, xs_sys::backend::Dom0Source::Simulated));
     assert_eq!(port, info.port);
     let mut ring = Ring::new(page).unwrap();
     let mut guest = hv.guest(0).unwrap();

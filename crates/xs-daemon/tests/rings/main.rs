@@ -1667,7 +1667,7 @@ fn stderr_tells_the_start_the_stop_and_the_first_domains() {
     assert_eq!(lines.len(), 7, "{lines:#?}");
     assert_eq!(lines[0], format!(" info|xenstored] {}", log::STARTED));
     assert!(
-        lines[1].starts_with(" info|domains] domain 0's ring mapped from /sim/xsd_kva, event channel "),
+        lines[1].starts_with(" info|domains] domain 0's ring mapped from the simulated hypervisor, event channel "),
         "{lines:#?}"
     );
     assert!(

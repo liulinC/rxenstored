@@ -253,13 +253,9 @@ fn announce(s: &Start, written: &mut Vec<PathBuf>, pending: &mut Option<Readines
 }
 
 /// The devices of a dom0, at their usual places; dom0's ring where the
-/// configuration says.
+/// configuration says (`XenOptions::with_dom0_files`).
 fn xen_options(o: &reactor::Options) -> XenOptions {
-    XenOptions {
-        xsd_kva: o.xsd_kva.clone(),
-        xsd_port: o.xsd_port.clone(),
-        ..XenOptions::default()
-    }
+    XenOptions::default().with_dom0_files(o.xsd_kva.clone(), o.xsd_port.clone())
 }
 
 fn open_xen(o: &reactor::Options) -> io::Result<RealXen> {
@@ -462,6 +458,10 @@ mod tests {
         // And on to the devices, the others at their usual places.
         let xo = xen_options(o);
         assert_eq!((xo.xsd_kva, xo.xsd_port), ("/k".into(), "/p".into()));
+        assert_eq!(
+            xo.xenbus_backend, None,
+            "files named in the configuration are used as given"
+        );
         assert_eq!(xo.evtchn, XenOptions::default().evtchn);
         assert_eq!((o.config.value_max, o.config.path_max), (2048, 1024));
         assert!(o.config.perms_activate && !o.config.perms_watch_activate);
@@ -499,6 +499,8 @@ mod tests {
         assert_eq!(s.options.config.value_max, usize::MAX);
         assert!(!s.options.config.perms_activate);
         assert_eq!(s.options.xsd_kva, PathBuf::from("/proc/xen/xsd_kva"));
+        // The default files: the xenbus backend device first.
+        assert_eq!(xen_options(&s.options), XenOptions::default());
         assert_eq!(
             warn,
             [

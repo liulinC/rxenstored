@@ -6,7 +6,8 @@
 //! never binds a guest's port; the self-test uses two ports of its own.
 //!
 //!   xen_probe domains [DOMID...]          state of each domain (default 0 to 20)
-//!   xen_probe dom0-ring                   dom0's ring from xsd_kva, port from xsd_port
+//!   xen_probe dom0-ring [--files]         dom0's ring and port from /dev/xen/xenbus_backend,
+//!                                         or with --files from xsd_kva and xsd_port
 //!   xen_probe peek-ring DOMID GFN [--grant]
 //!                                         a guest's ring by foreign mapping of GFN
 //!                                         (`xenstore-read /local/domain/DOMID/store/ring-ref`),
@@ -44,7 +45,7 @@ use xs_sys::xen::{self, RealXen, RingMapping, XenOptions};
 use xs_sys::{Epoll, Interest};
 
 const USAGE: &str = "usage: xen_probe domains [DOMID...]
-       xen_probe dom0-ring
+       xen_probe dom0-ring [--files]
        xen_probe peek-ring DOMID GFN [--grant]
        xen_probe evtchn-selftest";
 
@@ -56,7 +57,8 @@ fn main() -> ExitCode {
             Some(ids) => domains(&ids),
             None => return usage(),
         },
-        ["dom0-ring"] => dom0_ring(),
+        ["dom0-ring"] => dom0_ring(false),
+        ["dom0-ring", "--files"] => dom0_ring(true),
         ["peek-ring", rest @ ..] => {
             let grant = rest.contains(&"--grant");
             let pos: Vec<&&str> = rest.iter().filter(|w| **w != "--grant").collect();
@@ -155,12 +157,18 @@ fn print_ring(what: &str, m: &Mapping) {
     }
 }
 
-fn dom0_ring() -> io::Result<()> {
-    let mut x = open(RingMapping::Foreign)?;
-    let (m, port) = x.dom0_ring()?;
-    println!("xsd_port: {port}");
-    print_ring("dom0 ring (xsd_kva)", &m);
-    drop(m);
+fn dom0_ring(files: bool) -> io::Result<()> {
+    let d = XenOptions::default();
+    let o = XenOptions {
+        xenbus_backend: d.xenbus_backend.filter(|_| !files),
+        ..d
+    };
+    let mut x = RealXen::open(&o)?;
+    let r = x.dom0_ring()?;
+    println!("source: {:?}", r.source);
+    println!("port: {}", r.port);
+    print_ring("dom0 ring", &r.page);
+    drop(r);
     println!("unmapped");
     Ok(())
 }

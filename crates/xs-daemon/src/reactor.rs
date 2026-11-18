@@ -35,9 +35,11 @@ pub struct Options {
     /// `ring-scan-interval`: each ring is examined once per this period
     /// without waiting for a notification. None: never.
     pub ring_scan: Option<Duration>,
-    /// `xenstored-kva`: the file dom0's ring page is mapped from.
+    /// `xenstored-kva`: the file dom0's ring page is mapped from, if not
+    /// from the xenbus backend device (`XenOptions::with_dom0_files`).
     pub xsd_kva: PathBuf,
-    /// `xenstored-port`: the file that holds dom0's event channel port.
+    /// `xenstored-port`: the file that holds dom0's event channel port,
+    /// likewise.
     pub xsd_port: PathBuf,
     /// The core's configuration; `run` sets `tool_xenstored`.
     pub config: Config,
@@ -272,7 +274,7 @@ pub fn run<X: XenBackend>(
                 format!("cannot open the Xen devices (--no-domain-init serves the socket only): {e}"),
             )
         })?;
-        r.start_xen(opts, xen)?;
+        r.start_xen(xen)?;
     }
     // After dom0's ring: oxenstored opens its access log after it too.
     crate::log::attach(&mut r.core);

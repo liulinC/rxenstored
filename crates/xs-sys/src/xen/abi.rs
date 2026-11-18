@@ -370,6 +370,38 @@ pub fn parse_xsd_port(text: &str) -> io::Result<Port> {
     }
 }
 
+// ---- /dev/xen/xenbus_backend (xen/xenbus_dev.h) ----
+//
+// The header is internal to Linux 4.19 (include/xen/xenbus_dev.h); Xen
+// carries the same definitions in tools/include/xen-sys/Linux/xenbus_dev.h.
+
+/// IOCTL_XENBUS_BACKEND_EVTCHN takes no argument (xenbus_dev.h:38-39,
+/// size 0); its result is the port.
+#[repr(C)]
+pub(super) struct XenbusBackendEvtchn {}
+
+/// xenbus_dev.h:38. Number 1 is IOCTL_XENBUS_BACKEND_SETUP, which hands
+/// the store to another domain: never used here.
+pub(super) const IOCTL_XENBUS_BACKEND_EVTCHN: u32 = ioc_none(b'B', 0, size_of::<XenbusBackendEvtchn>());
+
+impl Request for XenbusBackendEvtchn {
+    const NR: u32 = IOCTL_XENBUS_BACKEND_EVTCHN;
+}
+
+/// The port IOCTL_XENBUS_BACKEND_EVTCHN returned. The driver fails with
+/// ENODEV rather than return a port that is not positive (Linux 4.19
+/// drivers/xen/xenbus/xenbus_dev_backend.c:81-84); 0 is refused anyway,
+/// as for `xsd_port`.
+pub(super) fn backend_port(rc: libc::c_int) -> io::Result<Port> {
+    match Port::try_from(rc) {
+        Ok(p) if p > 0 => Ok(p),
+        _ => Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("expected an event channel port number, got {rc}"),
+        )),
+    }
+}
+
 // ---- the ring page (Xen public/io/xs_wire.h) ----
 
 /// struct xenstore_domain_interface (xs_wire.h:105): req[1024] and
@@ -596,6 +628,20 @@ mod tests {
             let e = parse_xsd_port(bad).unwrap_err();
             assert_eq!(e.kind(), io::ErrorKind::InvalidData, "{bad:?}");
             assert!(e.to_string().contains(&format!("{bad:?}")), "{e}");
+        }
+    }
+
+    #[test]
+    fn the_xenbus_backend_ioctl_matches_the_header() {
+        // xenbus_dev.h:38-39: _IOC(_IOC_NONE, 'B', 0, 0).
+        assert_eq!(IOCTL_XENBUS_BACKEND_EVTCHN, 0x4200);
+        assert_eq!(size_of::<XenbusBackendEvtchn>(), 0);
+        assert_eq!(backend_port(29).unwrap(), 29);
+        assert_eq!(backend_port(libc::c_int::MAX).unwrap(), 0x7fff_ffff);
+        for bad in [0, -1, libc::c_int::MIN] {
+            let e = backend_port(bad).unwrap_err();
+            assert_eq!(e.kind(), io::ErrorKind::InvalidData);
+            assert!(e.to_string().ends_with(&format!("got {bad}")), "{e}");
         }
     }
 

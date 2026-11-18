@@ -12,8 +12,10 @@ how the daemon is built.
   oxenstored gives them, errors under `--config-test`; four keys are not honoured, below),
   writes the pid file, daemonises and sends `READY=1` to systemd. SIGTERM and SIGINT stop it,
   SIGHUP reopens the logs.
-- Transports: the same unix socket, dom0's ring from `/proc/xen/xsd_kva` and
-  `/proc/xen/xsd_port`, guest rings by foreign mapping of the gfn that INTRODUCE gives, the
+- Transports: the same unix socket, dom0's ring from `/dev/xen/xenbus_backend`
+  (falling back to `/proc/xen/xsd_kva` and `/proc/xen/xsd_port`, which are used as configured
+  when `xenstored-kva` or `xenstored-port` name other paths; the device path has not run on
+  a host yet), guest rings by foreign mapping of the gfn that INTRODUCE gives, the
   RECONNECTION ring feature advertised, domain state through Xen 4.17's domctl (interface
   version 0x15).
 - Semantics of every request it serves: permissions, the XSA-115 check of watch events,

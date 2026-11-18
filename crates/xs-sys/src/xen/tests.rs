@@ -37,7 +37,7 @@ impl Drop for Dir {
 }
 
 /// Character devices everywhere Xen's would be, and a dom0 ring made of
-/// regular files.
+/// regular files, used as configured (no xenbus backend device).
 fn fake(d: &Dir, mode: RingMapping) -> XenOptions {
     let kva = d.file("xsd_kva", &[0; PAGE_SIZE]);
     XenOptions {
@@ -47,6 +47,7 @@ fn fake(d: &Dir, mode: RingMapping) -> XenOptions {
         hypercall: d.missing("hypercall"),
         #[cfg(feature = "gnttab")]
         gntdev: "/dev/zero".into(),
+        xenbus_backend: None,
         xsd_kva: kva,
         xsd_port: d.file("xsd_port", b"7"),
         ring_mapping: mode,
@@ -69,6 +70,7 @@ fn defaults_are_those_of_a_dom0() {
     assert_eq!(o.hypercall, Path::new("/dev/xen/hypercall"));
     #[cfg(feature = "gnttab")]
     assert_eq!(o.gntdev, Path::new("/dev/xen/gntdev"));
+    assert_eq!(o.xenbus_backend.as_deref(), Some(Path::new("/dev/xen/xenbus_backend")));
     assert_eq!(o.xsd_kva, Path::new("/proc/xen/xsd_kva"));
     assert_eq!(o.xsd_port, Path::new("/proc/xen/xsd_port"));
     assert_eq!(o.ring_mapping, RingMapping::Foreign);
@@ -406,7 +408,7 @@ fn ring_mapping_failures_are_clean() {
     assert_eq!(x.ring_mapping(), RingMapping::Foreign);
     assert_eq!(
         format!("{x:?}"),
-        r#"RealXen { ring_mapping: Foreign, privcmd: "/dev/zero", hypercall_buffer: "locked memory", .. }"#
+        r#"RealXen { ring_mapping: Foreign, privcmd: "/dev/zero", hypercall_buffer: "locked memory", xenbus_backend: None, .. }"#
     );
     // The privcmd mapping is made, then the batch fails and it is undone.
     assert_eq!(
@@ -463,8 +465,16 @@ fn dom0_ring_maps_xsd_kva_and_reads_xsd_port() {
         kva.write_at(&v.to_ne_bytes(), off).unwrap();
     }
     let mut x = RealXen::open(&o).unwrap();
-    let (m, port) = x.dom0_ring().unwrap();
+    let r = x.dom0_ring().unwrap();
+    let (m, port) = (r.page, r.port);
     assert_eq!((m.len(), port), (PAGE_SIZE, 7));
+    match r.source {
+        Dom0Source::Files { kva, port, device } => {
+            assert_eq!((kva, port), (o.xsd_kva.clone(), o.xsd_port.clone()));
+            assert!(device.is_none(), "not tried");
+        }
+        other => panic!("{other:?}"),
+    }
     let f = ring_fields(&m).unwrap();
     assert_eq!(
         f,
@@ -538,4 +548,181 @@ fn ring_fields_need_a_whole_ring() {
             assert_eq!((r.req_cons, r.req_prod, r.error), (7, 0, 8));
         }
     }
+}
+
+fn dom0_files(d: &Dir) -> (PathBuf, PathBuf) {
+    (d.file("xsd_kva", &[0; PAGE_SIZE]), d.file("xsd_port", b"7"))
+}
+
+/// The page and port a working device would give: /dev/zero's page, port 9.
+fn working_device(path: &Path) -> Result<(Mapping, Port), DeviceNotUsed> {
+    assert_eq!(path, Path::new("/dev/xen/xenbus_backend"));
+    let fd = open_device(Path::new("/dev/zero"), false).unwrap();
+    // SAFETY: /dev/zero's page lives with the mapping.
+    Ok((unsafe { Mapping::of_fd(&fd, 0, PAGE_SIZE) }.unwrap(), 9))
+}
+
+#[test]
+#[cfg_attr(miri, ignore = "file-backed mmap: not emulated by Miri")]
+fn dom0_ring_comes_from_the_xenbus_backend_device_when_it_works() {
+    let d = Dir::new("dom0dev");
+    // The files are not read: they do not exist.
+    let r = dom0_ring_from(
+        Some(Path::new("/dev/xen/xenbus_backend")),
+        working_device,
+        &d.missing("xsd_kva"),
+        &d.missing("xsd_port"),
+    )
+    .unwrap();
+    assert_eq!((r.page.len(), r.port), (PAGE_SIZE, 9));
+    assert!(
+        matches!(&r.source, Dom0Source::Device(p) if p == Path::new("/dev/xen/xenbus_backend")),
+        "{:?}",
+        r.source
+    );
+}
+
+#[test]
+#[cfg_attr(miri, ignore = "open with O_NONBLOCK: not emulated by Miri")]
+fn dom0_ring_falls_back_to_the_files_when_the_device_is_missing() {
+    let d = Dir::new("dom0nodev");
+    let mut o = fake(&d, RingMapping::Foreign);
+    o.xenbus_backend = Some(d.missing("xenbus_backend"));
+    let r = RealXen::open(&o).unwrap().dom0_ring().unwrap();
+    assert_eq!((r.page.len(), r.port), (PAGE_SIZE, 7));
+    match r.source {
+        Dom0Source::Files {
+            kva,
+            port,
+            device: Some(dev),
+        } => {
+            assert_eq!((kva, port), (o.xsd_kva, o.xsd_port));
+            assert!(dev.missing);
+            assert_eq!(dev.error.raw_os_error(), Some(libc::ENOENT));
+            assert_eq!(
+                dev.to_string(),
+                format!(
+                    "{}: No such file or directory (os error 2)",
+                    d.missing("xenbus_backend").display()
+                )
+            );
+        }
+        other => panic!("{other:?}"),
+    }
+}
+
+/// A device that is there but does not work falls back too, and is not
+/// missing: the daemon logs that as a warning.
+#[test]
+#[cfg_attr(miri, ignore = "open with O_NONBLOCK: not emulated by Miri")]
+fn a_device_that_fails_falls_back_and_is_not_missing() {
+    let d = Dir::new("dom0baddev");
+    let regular = d.file("regular", b"");
+    for (dev, error) in [
+        // The ioctl is refused. (The Xen driver's ENODEV, when the kernel
+        // has no store port, comes from the ioctl too: not missing.)
+        (
+            PathBuf::from("/dev/zero"),
+            "IOCTL_XENBUS_BACKEND_EVTCHN: Inappropriate ioctl for device (os error 25)",
+        ),
+        (regular.clone(), "not a character device"),
+        (d.0.clone(), "Is a directory (os error 21)"),
+    ] {
+        let mut o = fake(&d, RingMapping::Foreign);
+        o.xenbus_backend = Some(dev.clone());
+        let r = RealXen::open(&o).unwrap().dom0_ring().unwrap();
+        assert_eq!(r.port, 7);
+        match r.source {
+            Dom0Source::Files { device: Some(e), .. } => {
+                assert!(!e.missing, "{e}");
+                assert_eq!(e.path, dev);
+                assert_eq!(e.error.to_string(), error);
+            }
+            other => panic!("{other:?}"),
+        }
+    }
+}
+
+#[test]
+fn only_a_device_that_does_not_exist_counts_as_missing() {
+    let os = io::Error::from_raw_os_error;
+    for errno in [libc::ENOENT, libc::ENODEV, libc::ENXIO] {
+        assert!(missing(&os(errno)), "{errno}");
+    }
+    for errno in [libc::EACCES, libc::EPERM, libc::ENOTTY, libc::EISDIR, libc::EIO] {
+        assert!(!missing(&os(errno)), "{errno}");
+    }
+}
+
+#[test]
+#[cfg_attr(
+    miri,
+    ignore = "Miri's strerror_r appends the error number, so the error text differs; the code before the check runs under Miri"
+)]
+fn when_the_files_fail_too_the_error_names_both() {
+    let d = Dir::new("dom0none");
+    let (kva, _) = dom0_files(&d);
+    let failed = |_: &Path| -> Result<(Mapping, Port), DeviceNotUsed> {
+        Err(DeviceNotUsed {
+            path: "/dev/xen/xenbus_backend".into(),
+            missing: false,
+            error: io::Error::from_raw_os_error(libc::EPERM),
+        })
+    };
+    let e = match dom0_ring_from(
+        Some(Path::new("/dev/xen/xenbus_backend")),
+        failed,
+        &kva,
+        &d.missing("no_port"),
+    ) {
+        Ok(_) => panic!("expected an error"),
+        Err(e) => e,
+    };
+    assert_eq!(e.kind(), io::ErrorKind::NotFound);
+    let msg = e.to_string();
+    assert!(
+        msg.starts_with("/dev/xen/xenbus_backend: Operation not permitted (os error 1), and ")
+            && msg.ends_with("no_port: No such file or directory (os error 2)"),
+        "{msg}"
+    );
+}
+
+#[test]
+#[cfg_attr(miri, ignore = "file-backed mmap: not emulated by Miri")]
+fn without_a_device_the_files_are_used_and_the_device_is_not_tried() {
+    let d = Dir::new("dom0files");
+    let (kva, port) = dom0_files(&d);
+    let r = dom0_ring_from(None, |_| panic!("tried"), &kva, &port).unwrap();
+    assert_eq!(r.port, 7);
+    assert!(matches!(r.source, Dom0Source::Files { device: None, .. }));
+}
+
+/// The rule of the configuration keys: files other than the defaults are
+/// used as given; the defaults, set or not, are the device's fallback.
+#[test]
+fn configured_files_other_than_the_defaults_win_over_the_device() {
+    let d = XenOptions::default();
+    let with = |kva: &str, port: &str| XenOptions::default().with_dom0_files(kva.into(), port.into());
+    let stock = with("/proc/xen/xsd_kva", "/proc/xen/xsd_port");
+    assert_eq!(stock, d, "XCP-ng's oxenstored.conf sets the defaults: device first");
+    // Paths compare by component: the same path spelt otherwise.
+    assert_eq!(with("/proc/xen//xsd_kva", "/proc/xen/xsd_port/"), d);
+    for (kva, port) in [
+        ("/k", "/proc/xen/xsd_port"),
+        ("/proc/xen/xsd_kva", "/p"),
+        ("/k", "/p"),
+        ("/dev/xen/xenbus_backend", "/proc/xen/xsd_port"),
+    ] {
+        let o = with(kva, port);
+        assert_eq!(o.xenbus_backend, None, "{kva} {port}");
+        assert_eq!((o.xsd_kva, o.xsd_port), (kva.into(), port.into()));
+        assert_eq!(o.evtchn, d.evtchn);
+    }
+    // No device to begin with: none after.
+    let o = XenOptions {
+        xenbus_backend: None,
+        ..XenOptions::default()
+    }
+    .with_dom0_files(d.xsd_kva.clone(), d.xsd_port.clone());
+    assert_eq!(o.xenbus_backend, None);
 }

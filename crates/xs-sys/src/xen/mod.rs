@@ -15,7 +15,7 @@ mod abi;
 
 pub use abi::{domain_state_of, parse_xsd_port, DomainInfo, XEN_DOMCTL_INTERFACE_VERSION};
 
-use crate::backend::{DomainState, Pending, Port, XenBackend};
+use crate::backend::{DeviceNotUsed, Dom0Ring, Dom0Source, DomainState, Pending, Port, XenBackend};
 use crate::map::{mmap_result, Mapping, PAGE_SIZE};
 use std::fmt;
 use std::fs::OpenOptions;
@@ -52,6 +52,9 @@ pub struct XenOptions {
     /// Opened in `RingMapping::Grant` mode only.
     #[cfg(feature = "gnttab")]
     pub gntdev: PathBuf,
+    /// Dom0's ring page and port are taken from here first; if it cannot
+    /// be used, from `xsd_kva` and `xsd_port`. None: from those only.
+    pub xenbus_backend: Option<PathBuf>,
     pub xsd_kva: PathBuf,
     pub xsd_port: PathBuf,
     pub ring_mapping: RingMapping,
@@ -66,9 +69,28 @@ impl Default for XenOptions {
             hypercall: "/dev/xen/hypercall".into(),
             #[cfg(feature = "gnttab")]
             gntdev: "/dev/xen/gntdev".into(),
+            xenbus_backend: Some("/dev/xen/xenbus_backend".into()),
             xsd_kva: "/proc/xen/xsd_kva".into(),
             xsd_port: "/proc/xen/xsd_port".into(),
             ring_mapping: RingMapping::Foreign,
+        }
+    }
+}
+
+impl XenOptions {
+    /// Dom0's ring files as the configuration names them
+    /// (`xenstored-kva`, `xenstored-port`). Paths other than the defaults
+    /// are used as given and the xenbus backend device is not tried; the
+    /// defaults, which XCP-ng's oxenstored.conf sets explicitly, are the
+    /// device's fallback.
+    pub fn with_dom0_files(self, kva: PathBuf, port: PathBuf) -> XenOptions {
+        let d = XenOptions::default();
+        let stock = kva == d.xsd_kva && port == d.xsd_port;
+        XenOptions {
+            xenbus_backend: self.xenbus_backend.filter(|_| stock),
+            xsd_kva: kva,
+            xsd_port: port,
+            ..self
         }
     }
 }
@@ -85,6 +107,7 @@ pub struct RealXen {
     /// comes from (None: locked memory).
     privcmd_path: PathBuf,
     hcall_path: Option<PathBuf>,
+    xenbus_backend: Option<PathBuf>,
     xsd_kva: PathBuf,
     xsd_port: PathBuf,
 }
@@ -107,6 +130,7 @@ impl fmt::Debug for RealXen {
             .field("ring_mapping", &self.ring_mapping())
             .field("privcmd", &self.privcmd_path)
             .field("hypercall_buffer", &hcall)
+            .field("xenbus_backend", &self.xenbus_backend)
             .finish_non_exhaustive()
     }
 }
@@ -273,6 +297,86 @@ fn write_port(fd: RawFd, port: Port) -> io::Result<()> {
     Ok(())
 }
 
+/// Dom0's ring from the xenbus backend device: the port by ioctl, the
+/// page by mmap. The descriptor is closed on return; the mapping holds
+/// its own reference to the file.
+fn dom0_ring_of_device(path: &Path) -> Result<(Mapping, Port), DeviceNotUsed> {
+    let not_used = |error, missing| DeviceNotUsed {
+        path: path.to_owned(),
+        missing,
+        error,
+    };
+    let fd = open_raw(path, false).map_err(|e| {
+        let m = missing(&e);
+        not_used(e, m)
+    })?;
+    // SAFETY: the argument is empty; the driver does not read it.
+    let port = unsafe { ioctl(&fd, &mut abi::XenbusBackendEvtchn {}) }
+        .and_then(abi::backend_port)
+        .map_err(|e| not_used(ctx(e, format_args!("IOCTL_XENBUS_BACKEND_EVTCHN")), false))?;
+    // cov:excl-start xen-backend-port
+    // SAFETY: the driver maps the kernel's xenstore page, allocated at
+    // boot and never freed, and accepts one page at offset 0 (Linux 4.19
+    // xenbus_dev_backend.c:92-108); the page is mapped at mmap, not on
+    // fault.
+    let page =
+        unsafe { Mapping::of_fd(&fd, 0, PAGE_SIZE) }.map_err(|e| not_used(ctx(e, format_args!("mmap")), false))?;
+    Ok((page, port))
+    // cov:excl-stop xen-backend-port
+}
+
+/// Dom0's ring from xenfs's files, or files configured in their place.
+fn dom0_ring_of_files(kva: &Path, port: &Path) -> io::Result<(Mapping, Port)> {
+    let text = std::fs::read_to_string(port).map_err(|e| ctx(e, format_args!("{}", port.display())))?;
+    let p = parse_xsd_port(&text).map_err(|e| ctx(e, format_args!("{}", port.display())))?;
+    let f = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(kva)
+        .map_err(|e| ctx(e, format_args!("{}", kva.display())))?;
+    // SAFETY: `xsd_kva` is the kernel's file of dom0's xenstore page,
+    // which lives as long as the kernel (or the file root's
+    // configuration names in its place, which root must not truncate).
+    let m =
+        unsafe { Mapping::of_fd(&f, 0, PAGE_SIZE) }.map_err(|e| ctx(e, format_args!("mmap of {}", kva.display())))?;
+    Ok((m, p))
+}
+
+/// Dom0's ring from `device` if given and usable, else from the files.
+/// Any failure of the device falls back: both give the same page and
+/// port. If the files fail too, the error names both.
+fn dom0_ring_from(
+    device: Option<&Path>,
+    by_device: impl FnOnce(&Path) -> Result<(Mapping, Port), DeviceNotUsed>,
+    kva: &Path,
+    port: &Path,
+) -> io::Result<Dom0Ring> {
+    let tried = match device.map(|d| (d, by_device(d))) {
+        Some((d, Ok((page, port)))) => {
+            return Ok(Dom0Ring {
+                page,
+                port,
+                source: Dom0Source::Device(d.to_owned()),
+            })
+        }
+        Some((_, Err(e))) => Some(e),
+        None => None,
+    };
+    let (page, p) = dom0_ring_of_files(kva, port).map_err(|f| match &tried {
+        Some(d) => io::Error::new(f.kind(), format!("{d}, and {f}")),
+        None => f,
+    })?;
+    Ok(Dom0Ring {
+        page,
+        port: p,
+        source: Dom0Source::Files {
+            kva: kva.to_owned(),
+            port: port.to_owned(),
+            device: tried,
+        },
+    })
+}
+
 fn not_a_guest(domid: u32) -> io::Error {
     io::Error::new(
         io::ErrorKind::InvalidInput,
@@ -307,6 +411,7 @@ impl RealXen {
             hcall,
             privcmd_path,
             hcall_path,
+            xenbus_backend: o.xenbus_backend.clone(),
             xsd_kva: o.xsd_kva.clone(),
             xsd_port: o.xsd_port.clone(),
         })
@@ -483,21 +588,13 @@ impl XenBackend for RealXen {
             .map_err(|e| ctx(e, format_args!("IOCTL_EVTCHN_NOTIFY of port {local}")))
     }
 
-    fn dom0_ring(&mut self) -> io::Result<(Mapping, Port)> {
-        let text =
-            std::fs::read_to_string(&self.xsd_port).map_err(|e| ctx(e, format_args!("{}", self.xsd_port.display())))?;
-        let port = parse_xsd_port(&text).map_err(|e| ctx(e, format_args!("{}", self.xsd_port.display())))?;
-        let kva = OpenOptions::new()
-            .read(true)
-            .write(true)
-            .open(&self.xsd_kva)
-            .map_err(|e| ctx(e, format_args!("{}", self.xsd_kva.display())))?;
-        // SAFETY: `xsd_kva` is the kernel's file of dom0's xenstore page,
-        // which lives as long as the kernel (or the file root's
-        // configuration names in its place, which root must not truncate).
-        let m = unsafe { Mapping::of_fd(&kva, 0, PAGE_SIZE) }
-            .map_err(|e| ctx(e, format_args!("mmap of {}", self.xsd_kva.display())))?;
-        Ok((m, port))
+    fn dom0_ring(&mut self) -> io::Result<Dom0Ring> {
+        dom0_ring_from(
+            self.xenbus_backend.as_deref(),
+            dom0_ring_of_device,
+            &self.xsd_kva,
+            &self.xsd_port,
+        )
     }
 
     fn map_ring(&mut self, domid: u32, gfn: u64) -> io::Result<Mapping> {

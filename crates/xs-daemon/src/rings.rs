@@ -31,14 +31,15 @@
 //! less often (`Backoff`), each time with every ring and domain examined,
 //! instead of being polled in a loop.
 
-use crate::reactor::{Conn, Io, Kind, Options, Reactor, XEN};
+use crate::log::Level;
+use crate::reactor::{Conn, Io, Kind, Reactor, XEN};
 use std::collections::HashMap;
 use std::fmt;
 use std::io;
 use std::ops::Bound;
 use std::time::{Duration, Instant};
 use xs_core::{ConnId, GaveUp, Machine, Status};
-use xs_sys::backend::{DomainState, Pending, Port, XenBackend};
+use xs_sys::backend::{Dom0Ring, Dom0Source, DomainState, Pending, Port, XenBackend};
 use xs_sys::ring::{Ring, CONNECTED, ERROR_COMM, ERROR_PROTO, ERROR_RINGIDX, FEATURE_RECONNECTION};
 use xs_sys::Interest;
 use xs_wire::Errno;
@@ -248,13 +249,17 @@ impl<X: XenBackend> Reactor<X> {
     /// VIRQ_DOM_EXC is bound first, and Xen is asked about domain 0 before
     /// anything, so that a hypervisor whose interface the daemon does not
     /// speak fails the start instead of making every domain look dead.
-    pub(crate) fn start_xen(&mut self, opts: &Options, mut xen: X) -> io::Result<()> {
+    pub(crate) fn start_xen(&mut self, mut xen: X) -> io::Result<()> {
         let fail = |what: &'static str| move |e: io::Error| io::Error::new(e.kind(), format!("{what}: {e}"));
         if xen.domain_state(0).map_err(fail("cannot ask Xen about domain 0"))? == DomainState::Dead {
             return Err(io::Error::other("Xen says domain 0 does not exist: is this the hypervisor interface rxenstored was built for (Xen 4.17)?"));
         }
         let virq = xen.bind_dom_exc().map_err(fail("cannot bind VIRQ_DOM_EXC"))?;
-        let (page, remote) = xen.dom0_ring().map_err(fail("cannot map domain 0's ring"))?;
+        let Dom0Ring {
+            page,
+            port: remote,
+            source,
+        } = xen.dom0_ring().map_err(fail("cannot map domain 0's ring"))?;
         let mut ring = Ring::new(page).map_err(fail("domain 0's ring"))?;
         let local = xen
             .bind_interdomain(0, remote)
@@ -266,13 +271,15 @@ impl<X: XenBackend> Reactor<X> {
         self.io.add_ring(id, RingConn::new(0, ring, local, remote));
         self.io.dom_exc = Some(virq);
         self.io.xen = Some(xen);
+        let (page_from, port_from, fallback) = dom0_origin(&source);
+        if let Some((level, line)) = fallback {
+            crate::log::echo(crate::log::Stderr::Always, level, "domains", format_args!("{line}"));
+        }
         crate::echo!(
             Always,
             Info,
             "domains",
-            "domain 0's ring mapped from {}, event channel {remote} (from {}) on local port {local}; VIRQ_DOM_EXC on local port {virq}",
-            opts.xsd_kva.display(),
-            opts.xsd_port.display()
+            "domain 0's ring mapped from {page_from}, event channel {remote} (from {port_from}) on local port {local}; VIRQ_DOM_EXC on local port {virq}"
         );
         Ok(())
     }
@@ -779,5 +786,89 @@ impl<X: XenBackend> Machine for Io<X> {
             "domain {domid} {}: connection closed",
             if self.dying { "died" } else { "released" }
         );
+    }
+}
+
+/// For the log: where domain 0's ring page and port came from, and, if
+/// the xenbus backend device was tried and not used, a line saying why
+/// (a warning unless the device does not exist).
+fn dom0_origin(s: &Dom0Source) -> (String, String, Option<(Level, String)>) {
+    match s {
+        Dom0Source::Device(p) => (p.display().to_string(), p.display().to_string(), None),
+        Dom0Source::Files { kva, port, device } => (
+            kva.display().to_string(),
+            port.display().to_string(),
+            device.as_ref().map(|d| {
+                (
+                    if d.missing { Level::Info } else { Level::Warn },
+                    format!(
+                        "{d}: domain 0's ring is taken from {} and {} instead",
+                        kva.display(),
+                        port.display()
+                    ),
+                )
+            }),
+        ),
+        Dom0Source::Simulated => (
+            "the simulated hypervisor".into(),
+            "the simulated hypervisor".into(),
+            None,
+        ),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::path::PathBuf;
+    use xs_sys::backend::DeviceNotUsed;
+
+    #[test]
+    #[cfg_attr(
+        miri,
+        ignore = "Miri's strerror_r appends the error number, so the error text differs; the code before the check runs under Miri"
+    )]
+    fn the_log_names_where_dom0_s_ring_came_from() {
+        let dev = PathBuf::from("/dev/xen/xenbus_backend");
+        assert_eq!(
+            dom0_origin(&Dom0Source::Device(dev.clone())),
+            (dev.display().to_string(), dev.display().to_string(), None)
+        );
+        let files = |device| Dom0Source::Files {
+            kva: "/proc/xen/xsd_kva".into(),
+            port: "/proc/xen/xsd_port".into(),
+            device,
+        };
+        let (k, p, note) = dom0_origin(&files(None));
+        assert_eq!(
+            (k.as_str(), p.as_str(), note),
+            ("/proc/xen/xsd_kva", "/proc/xen/xsd_port", None)
+        );
+        let not_used = |missing, errno| {
+            Some(DeviceNotUsed {
+                path: dev.clone(),
+                missing,
+                error: io::Error::from_raw_os_error(errno),
+            })
+        };
+        let (_, _, note) = dom0_origin(&files(not_used(true, libc::ENOENT)));
+        assert_eq!(
+            note,
+            Some((
+                Level::Info,
+                "/dev/xen/xenbus_backend: No such file or directory (os error 2): domain 0's ring is taken from \
+                 /proc/xen/xsd_kva and /proc/xen/xsd_port instead"
+                    .into()
+            ))
+        );
+        let (_, _, note) = dom0_origin(&files(not_used(false, libc::EPERM)));
+        let (level, line) = note.unwrap();
+        assert_eq!(level, Level::Warn);
+        assert!(
+            line.starts_with("/dev/xen/xenbus_backend: Operation not permitted (os error 1): "),
+            "{line}"
+        );
+        let (k, _, note) = dom0_origin(&Dom0Source::Simulated);
+        assert_eq!((k.as_str(), note), ("the simulated hypervisor", None));
     }
 }

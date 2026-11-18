@@ -106,7 +106,7 @@ use std::io;
 use std::os::fd::{AsRawFd, RawFd};
 use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 use std::time::{Duration, Instant};
-use xs_sys::backend::{DomainState, Pending, Port, XenBackend};
+use xs_sys::backend::{Dom0Ring, Dom0Source, DomainState, Pending, Port, XenBackend};
 use xs_sys::fd::{memfd, wait_readable, EventFd, Memfd};
 use xs_sys::map::{Mapping, PAGE_SIZE};
 use xs_sys::ring::{Field, GuestRing, CONNECTED, RING_SIZE};
@@ -428,11 +428,15 @@ impl XenBackend for SimXen {
         Ok(())
     }
 
-    fn dom0_ring(&mut self) -> io::Result<(Mapping, Port)> {
+    fn dom0_ring(&mut self) -> io::Result<Dom0Ring> {
         let mut s = self.shared.lock();
         s.check(Op::Dom0Ring)?;
         let d = s.domains.get(&0).ok_or_else(|| errno(ENOENT))?;
-        Ok((d.page.map(0, PAGE_SIZE)?, d.info.port))
+        Ok(Dom0Ring {
+            page: d.page.map(0, PAGE_SIZE)?,
+            port: d.info.port,
+            source: Dom0Source::Simulated,
+        })
     }
 
     fn map_ring(&mut self, domid: u32, gfn: u64) -> io::Result<Mapping> {
