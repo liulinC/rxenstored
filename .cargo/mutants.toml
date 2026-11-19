@@ -29,5 +29,5 @@ exclude_re = [
     'crates/xs-daemon/src/log/dest\.rs:\d+:\d+: replace \| with \^ in SyslogOut::send$',
     # XEN_DOMINF_DYING = 1 << 0: 1 >> 0 is 1 too. By line: a constant has no
     # function to name; if the line moves, the mutant shows again as missed.
-    'crates/xs-sys/src/xen/abi\.rs:243:44: replace << with >>$',
+    'crates/xs-sys/src/xen/abi\.rs:251:44: replace << with >>$',
 ]

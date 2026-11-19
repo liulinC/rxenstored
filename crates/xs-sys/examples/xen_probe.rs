@@ -108,7 +108,7 @@ fn open(mode: RingMapping) -> io::Result<RealXen> {
 fn domains(ids: &[u64]) -> io::Result<()> {
     let mut x = open(RingMapping::Foreign)?;
     println!(
-        "XEN_DOMCTL_getdomaininfo, domctl interface version {:#x}",
+        "XEN_DOMCTL_get_domain_state, domctl interface version {:#x} (stable)",
         xen::XEN_DOMCTL_INTERFACE_VERSION
     );
     let ids: Vec<u64> = if ids.is_empty() {

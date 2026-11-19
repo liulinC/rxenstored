@@ -233,13 +233,21 @@ pub(super) const HYPERVISOR_DOMCTL: u64 = 36;
 /// getdomaininfo refuses them (xen/common/domctl.c, EINVAL).
 pub(super) const DOMID_FIRST_RESERVED: u32 = 0x7FF0;
 
-/// public/domctl.h:24. Xen refuses any other value with EACCES
-/// (xen/common/domctl.c: `op->interface_version !=
-/// XEN_DOMCTL_INTERFACE_VERSION`).
-pub const XEN_DOMCTL_INTERFACE_VERSION: u32 = 0x15;
-/// public/domctl.h:1200.
-pub(super) const XEN_DOMCTL_GETDOMAININFO: u32 = 5;
-/// public/domctl.h:104-105.
+/// The interface_version of a stable domctl. XEN_DOMCTL_get_domain_state
+/// (Xen 4.20 and later) is stable: Xen wants 0 there whatever its own
+/// XEN_DOMCTL_INTERFACE_VERSION, and refuses anything else with EACCES
+/// (xen/common/domctl.c: `is_stable_domctl`). Using it keeps the daemon
+/// working across the domctl version bumps of Xen releases.
+pub const XEN_DOMCTL_INTERFACE_VERSION: u32 = 0;
+/// public/domctl.h: XEN_DOMCTL_get_domain_state, "stable interface".
+pub(super) const XEN_DOMCTL_GET_DOMAIN_STATE: u32 = 90;
+/// struct xen_domctl_get_domain_state, state bits
+/// (XEN_DOMCTL_GETDOMSTATE_STATE_*).
+const GETDOMSTATE_EXIST: u16 = 0x0001;
+const GETDOMSTATE_SHUTDOWN: u16 = 0x0002;
+const GETDOMSTATE_DYING: u16 = 0x0004;
+const GETDOMSTATE_DEAD: u16 = 0x0008;
+/// The XEN_DOMINF_* encoding DomainInfo keeps (public/domctl.h:104-105).
 pub(super) const XEN_DOMINF_DYING: u32 = 1 << 0;
 /// public/domctl.h:110-111.
 pub(super) const XEN_DOMINF_SHUTDOWN: u32 = 1 << 2;
@@ -255,17 +263,17 @@ pub(super) const DOMCTL_SIZE: usize = 16 + 128;
 const DOMCTL_CMD: usize = 0;
 const DOMCTL_VERSION: usize = 4;
 const DOMCTL_DOMAIN: usize = 8;
-/// u.getdomaininfo (domctl.h:99): domain (domid_t) at 0 (line 101), pad1
-/// (102), flags (uint32_t) at 4 (133).
+/// u.get_domain_state: state (uint16_t) at 0, caps (uint16_t) at 2, pad0
+/// (uint32_t) at 4, unique_id (uint64_t) at 8. xen_domctl.domain is IN/OUT.
 const DOMCTL_U: usize = 16;
-const GETDOMAININFO_DOMAIN: usize = DOMCTL_U;
-const GETDOMAININFO_FLAGS: usize = DOMCTL_U + 4;
+const GETDOMSTATE_STATE: usize = DOMCTL_U;
 
-/// What getdomaininfo says of one domain, the parts rxenstored uses.
+/// What Xen says of one domain, the parts rxenstored uses.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DomainInfo {
     pub domid: u32,
-    /// `XEN_DOMINF_*`.
+    /// `XEN_DOMINF_*` (dying and shutdown only, mapped from the
+    /// get_domain_state bits).
     pub flags: u32,
 }
 
@@ -279,6 +287,7 @@ impl DomainInfo {
     }
 
     /// The guest-supplied reason (`SHUTDOWN_*`), meaningful when `shutdown`.
+    /// XEN_DOMCTL_get_domain_state does not report it: always 0.
     pub fn shutdown_code(&self) -> u32 {
         (self.flags >> XEN_DOMINF_SHUTDOWNSHIFT) & XEN_DOMINF_SHUTDOWNMASK
     }
@@ -294,46 +303,54 @@ pub fn domain_state_of(info: Option<DomainInfo>) -> DomainState {
     }
 }
 
-/// The domctl argument of XEN_DOMCTL_getdomaininfo for `domid`.
-pub(super) fn getdomaininfo_request(domid: u16) -> [u8; DOMCTL_SIZE] {
+/// The domctl argument of XEN_DOMCTL_get_domain_state for `domid`.
+pub(super) fn get_domain_state_request(domid: u16) -> [u8; DOMCTL_SIZE] {
     let mut b = [0u8; DOMCTL_SIZE];
-    b[DOMCTL_CMD..DOMCTL_CMD + 4].copy_from_slice(&XEN_DOMCTL_GETDOMAININFO.to_ne_bytes());
+    b[DOMCTL_CMD..DOMCTL_CMD + 4].copy_from_slice(&XEN_DOMCTL_GET_DOMAIN_STATE.to_ne_bytes());
     b[DOMCTL_VERSION..DOMCTL_VERSION + 4].copy_from_slice(&XEN_DOMCTL_INTERFACE_VERSION.to_ne_bytes());
     b[DOMCTL_DOMAIN..DOMCTL_DOMAIN + 2].copy_from_slice(&domid.to_ne_bytes());
     b
 }
 
-/// Reads the domctl after a successful call. Xen answers for the first
-/// domain whose id is at least the one asked (xen/common/domctl.c,
-/// `d->domain_id >= dom`), so another id means there is no such domain.
-pub(super) fn getdomaininfo_reply(asked: u16, b: &[u8; DOMCTL_SIZE]) -> Option<DomainInfo> {
-    let domid = u16::from_ne_bytes([b[GETDOMAININFO_DOMAIN], b[GETDOMAININFO_DOMAIN + 1]]);
-    const F: usize = GETDOMAININFO_FLAGS;
-    let flags = u32::from_ne_bytes([b[F], b[F + 1], b[F + 2], b[F + 3]]);
-    (domid == asked).then_some(DomainInfo {
+/// Reads the domctl after a successful call. Xen answers for exactly the
+/// domain asked (it fails with ESRCH when there is none); a domain without
+/// the EXIST bit, or an answer for another id, is no domain.
+pub(super) fn get_domain_state_reply(asked: u16, b: &[u8; DOMCTL_SIZE]) -> Option<DomainInfo> {
+    let domid = u16::from_ne_bytes([b[DOMCTL_DOMAIN], b[DOMCTL_DOMAIN + 1]]);
+    let state = u16::from_ne_bytes([b[GETDOMSTATE_STATE], b[GETDOMSTATE_STATE + 1]]);
+    if domid != asked || state & GETDOMSTATE_EXIST == 0 {
+        return None;
+    }
+    let mut flags = 0;
+    if state & (GETDOMSTATE_DYING | GETDOMSTATE_DEAD) != 0 {
+        flags |= XEN_DOMINF_DYING;
+    }
+    if state & GETDOMSTATE_SHUTDOWN != 0 {
+        flags |= XEN_DOMINF_SHUTDOWN;
+    }
+    Some(DomainInfo {
         domid: domid.into(),
         flags,
     })
 }
 
-/// Turns a failed getdomaininfo into its meaning: ESRCH is no domain at
-/// or above the id asked; EACCES is first of all a hypervisor that does
-/// not speak this interface version, which must not pass for a dead
+/// Turns a failed get_domain_state into its meaning: ESRCH is no such
+/// domain; EACCES or ENOSYS is first of all a hypervisor without the
+/// stable domctl (older than Xen 4.20), which must not pass for a dead
 /// domain.
-pub(super) fn getdomaininfo_error(e: io::Error) -> io::Result<Option<DomainInfo>> {
+pub(super) fn get_domain_state_error(e: io::Error) -> io::Result<Option<DomainInfo>> {
     match e.raw_os_error() {
         Some(libc::ESRCH) => Ok(None),
-        Some(libc::EACCES) => Err(io::Error::new(
+        Some(libc::EACCES | libc::ENOSYS) => Err(io::Error::new(
             io::ErrorKind::PermissionDenied,
             format!(
-                "Xen refused XEN_DOMCTL_getdomaininfo: {e}; rxenstored speaks domctl interface version \
-                 {XEN_DOMCTL_INTERFACE_VERSION:#x} (Xen 4.17) and this hypervisor expects another one, \
-                 or an XSM policy denies the call"
+                "Xen refused XEN_DOMCTL_get_domain_state: {e}; rxenstored needs the stable domctl \
+                 of Xen 4.20 or later, or an XSM policy denies the call"
             ),
         )),
         _ => Err(io::Error::new(
             e.kind(),
-            format!("XEN_DOMCTL_getdomaininfo hypercall: {e}"),
+            format!("XEN_DOMCTL_get_domain_state hypercall: {e}"),
         )),
     }
 }
@@ -497,67 +514,79 @@ mod tests {
     }
 
     #[test]
-    fn xen_constants_match_the_4_17_headers() {
-        assert_eq!(XEN_DOMCTL_INTERFACE_VERSION, 0x15); // domctl.h:24
-        assert_eq!(XEN_DOMCTL_GETDOMAININFO, 5); // domctl.h:1200
+    fn xen_constants_match_the_headers() {
+        // Stable domctl: interface_version 0 (Xen 4.20+ domctl.h).
+        assert_eq!(XEN_DOMCTL_INTERFACE_VERSION, 0);
+        assert_eq!(XEN_DOMCTL_GET_DOMAIN_STATE, 90);
         assert_eq!(HYPERVISOR_DOMCTL, 36); // xen.h:110
         assert_eq!(VIRQ_DOM_EXC, 3); // xen.h:167
         assert_eq!(DOMID_FIRST_RESERVED, 0x7FF0); // xen.h:562
         assert_eq!((XEN_DOMINF_DYING, XEN_DOMINF_SHUTDOWN), (1, 4)); // domctl.h:104-111
 
-        // sizeof(struct xen_domctl) is 144; u is at 16; u.getdomaininfo
-        // .domain at 16 and .flags at 20.
+        // sizeof(struct xen_domctl) is 144; domain at 8; u is at 16;
+        // u.get_domain_state.state at 16.
         assert_eq!(DOMCTL_SIZE, 144);
-        assert_eq!((GETDOMAININFO_DOMAIN, GETDOMAININFO_FLAGS), (16, 20));
+        assert_eq!((DOMCTL_DOMAIN, GETDOMSTATE_STATE), (8, 16));
         // The reply is read from a page-aligned buffer: every field is
         // naturally aligned at these offsets.
-        assert_eq!(GETDOMAININFO_FLAGS % align_of::<u32>(), 0);
+        assert_eq!(GETDOMSTATE_STATE % align_of::<u16>(), 0);
     }
 
     #[test]
-    fn the_getdomaininfo_request_layout() {
-        let b = getdomaininfo_request(0x1234);
+    fn the_get_domain_state_request_layout() {
+        let b = get_domain_state_request(0x1234);
         let mut want = [0u8; 144];
-        // domctl.h:1195 cmd = XEN_DOMCTL_getdomaininfo (5), little-endian.
-        want[0] = 5;
-        // domctl.h:1285 interface_version = 0x15.
-        want[4] = 0x15;
-        // domctl.h:1286 domain (domid_t).
+        // cmd = XEN_DOMCTL_get_domain_state (90), little-endian.
+        want[0] = 90;
+        // interface_version = 0 for a stable domctl: want[4..8] stay 0.
+        // domain (domid_t).
         want[8] = 0x34;
         want[9] = 0x12;
         assert_eq!(b, want);
     }
 
-    fn reply(domain: u16, flags: u32) -> [u8; DOMCTL_SIZE] {
-        let mut b = getdomaininfo_request(0);
+    fn reply(domain: u16, state: u16) -> [u8; DOMCTL_SIZE] {
+        let mut b = get_domain_state_request(0);
+        // xen_domctl.domain is IN/OUT; u.get_domain_state.state at 16.
         b[8..10].copy_from_slice(&domain.to_le_bytes());
-        // domctl.h:101 u.getdomaininfo.domain, 133 u.getdomaininfo.flags.
-        b[16..18].copy_from_slice(&domain.to_le_bytes());
-        b[20..24].copy_from_slice(&flags.to_le_bytes());
-        // Fields a decoder must not read as the flags: tot_pages (line 134).
+        b[16..18].copy_from_slice(&state.to_le_bytes());
+        // Fields a decoder must not read as the state: caps, unique_id.
+        b[18..20].fill(0xff);
         b[24..32].fill(0xff);
         b
     }
 
     #[test]
-    fn the_getdomaininfo_reply_is_read_at_the_header_offsets() {
-        let i = getdomaininfo_reply(0x0102, &reply(0x0102, 0x0003_0024)).unwrap();
+    fn the_get_domain_state_reply_is_read_at_the_header_offsets() {
+        let i = get_domain_state_reply(0x0102, &reply(0x0102, GETDOMSTATE_EXIST | GETDOMSTATE_SHUTDOWN)).unwrap();
         assert_eq!(
             i,
             DomainInfo {
                 domid: 0x0102,
-                flags: 0x0003_0024
+                flags: XEN_DOMINF_SHUTDOWN
             }
         );
         assert!(i.shutdown() && !i.dying());
-        assert_eq!(i.shutdown_code(), 3);
-        // Each of the four bytes of the flags from its place.
-        assert_eq!(
-            getdomaininfo_reply(1, &reply(1, 0xa1b2_c3d4)).unwrap().flags,
-            0xa1b2_c3d4
+        assert_eq!(i.shutdown_code(), 0);
+        // Dying and dead both read as dying.
+        assert!(
+            get_domain_state_reply(1, &reply(1, GETDOMSTATE_EXIST | GETDOMSTATE_DYING))
+                .unwrap()
+                .dying()
         );
-        // The next domain up answered: the one asked does not exist.
-        assert_eq!(getdomaininfo_reply(5, &reply(6, 0)), None);
+        assert!(
+            get_domain_state_reply(1, &reply(1, GETDOMSTATE_EXIST | GETDOMSTATE_DEAD))
+                .unwrap()
+                .dying()
+        );
+        // Running: exists, nothing else.
+        assert_eq!(
+            get_domain_state_reply(1, &reply(1, GETDOMSTATE_EXIST)).unwrap().flags,
+            0
+        );
+        // No EXIST bit, or an answer for another id: no domain.
+        assert_eq!(get_domain_state_reply(5, &reply(5, 0)), None);
+        assert_eq!(get_domain_state_reply(5, &reply(6, GETDOMSTATE_EXIST)), None);
     }
 
     #[test]
@@ -574,19 +603,19 @@ mod tests {
     }
 
     #[test]
-    fn getdomaininfo_errors() {
-        let e = |n| getdomaininfo_error(io::Error::from_raw_os_error(n));
+    fn get_domain_state_errors() {
+        let e = |n| get_domain_state_error(io::Error::from_raw_os_error(n));
         assert_eq!(e(libc::ESRCH).unwrap(), None);
         let acc = e(libc::EACCES).unwrap_err();
         assert_eq!(acc.kind(), io::ErrorKind::PermissionDenied);
         let msg = acc.to_string();
         assert!(
-            msg.contains("interface version 0x15") && msg.contains("os error 13"),
+            msg.contains("Xen 4.20 or later") && msg.contains("os error 13"),
             "{msg}"
         );
         let other = e(libc::ENOTTY).unwrap_err();
         assert!(
-            other.to_string().starts_with("XEN_DOMCTL_getdomaininfo hypercall: "),
+            other.to_string().starts_with("XEN_DOMCTL_get_domain_state hypercall: "),
             "{other}"
         );
         assert!(other.to_string().contains("os error 25"), "{other}");

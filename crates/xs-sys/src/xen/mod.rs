@@ -451,13 +451,13 @@ impl RealXen {
             .map_err(|e| ctx(e, format_args!("IOCTL_EVTCHN_RESET after an overflow")))
     }
 
-    /// What `XEN_DOMCTL_getdomaininfo` says of `domid`: None if there is no
-    /// such domain.
+    /// What `XEN_DOMCTL_get_domain_state` says of `domid`: None if there is
+    /// no such domain.
     pub fn domain_info(&mut self, domid: u32) -> io::Result<Option<DomainInfo>> {
         let Some(dom) = abi::guest_domid(domid) else {
             return Ok(None);
         };
-        let req = abi::getdomaininfo_request(dom);
+        let req = abi::get_domain_state_request(dom);
         let buf = self.hcall.as_ptr();
         // SAFETY: the page is PAGE_SIZE bytes, larger than the request, and
         // only this value (borrowed mutably) uses it.
@@ -469,14 +469,14 @@ impl RealXen {
         // SAFETY: the domctl argument is in the hypercall page, which stays
         // mapped and is not touched by anything else during the call.
         match unsafe { ioctl(&self.privcmd, &mut call) } {
-            Err(e) => abi::getdomaininfo_error(e),
+            Err(e) => abi::get_domain_state_error(e),
             // cov:excl-start xen-domctl-reply
             Ok(_) => {
                 let mut reply = [0u8; abi::DOMCTL_SIZE];
                 // SAFETY: as above; the hypercall has returned, so Xen is
                 // done with the page.
                 unsafe { std::ptr::copy_nonoverlapping(buf, reply.as_mut_ptr(), reply.len()) };
-                Ok(abi::getdomaininfo_reply(dom, &reply))
+                Ok(abi::get_domain_state_reply(dom, &reply))
             } // cov:excl-stop xen-domctl-reply
         }
     }

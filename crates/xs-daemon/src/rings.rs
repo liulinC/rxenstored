@@ -252,7 +252,7 @@ impl<X: XenBackend> Reactor<X> {
     pub(crate) fn start_xen(&mut self, mut xen: X) -> io::Result<()> {
         let fail = |what: &'static str| move |e: io::Error| io::Error::new(e.kind(), format!("{what}: {e}"));
         if xen.domain_state(0).map_err(fail("cannot ask Xen about domain 0"))? == DomainState::Dead {
-            return Err(io::Error::other("Xen says domain 0 does not exist: is this the hypervisor interface rxenstored was built for (Xen 4.17)?"));
+            return Err(io::Error::other("Xen says domain 0 does not exist: does this hypervisor have the stable XEN_DOMCTL_get_domain_state (Xen 4.20 or later)?"));
         }
         let virq = xen.bind_dom_exc().map_err(fail("cannot bind VIRQ_DOM_EXC"))?;
         let Dom0Ring {

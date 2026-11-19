@@ -16,8 +16,8 @@ how the daemon is built.
   (falling back to `/proc/xen/xsd_kva` and `/proc/xen/xsd_port`, which are used as configured
   when `xenstored-kva` or `xenstored-port` name other paths; the device path has not run on
   a host yet), guest rings by foreign mapping of the gfn that INTRODUCE gives, the
-  RECONNECTION ring feature advertised, domain state through Xen 4.17's domctl (interface
-  version 0x15).
+  RECONNECTION ring feature advertised, domain state through the
+  stable XEN_DOMCTL_get_domain_state (Xen 4.20 and later; interface version 0).
 - Semantics of every request it serves: permissions, the XSA-115 check of watch events,
   the watch events each connection gets and their order (a change fires the watches on its
   path from the root down, each path's newest watch first, and for a removal those below it

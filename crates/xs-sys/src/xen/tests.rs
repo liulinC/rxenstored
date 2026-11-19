@@ -389,12 +389,13 @@ fn domain_state_is_an_error_when_the_hypercall_fails() {
     let e = x.domain_state(1).unwrap_err();
     assert_eq!(
         e.to_string(),
-        "XEN_DOMCTL_getdomaininfo hypercall: Inappropriate ioctl for device (os error 25)"
+        "XEN_DOMCTL_get_domain_state hypercall: Inappropriate ioctl for device (os error 25)"
     );
     // The request was put in the hypercall page.
     // SAFETY: inside the page, which nothing else uses.
     let head = unsafe { std::slice::from_raw_parts(x.hcall.as_ptr(), 10) }.to_vec();
-    assert_eq!(head, [5, 0, 0, 0, 0x15, 0, 0, 0, 1, 0]);
+    // cmd 90 (get_domain_state), interface_version 0 (stable), domain 1.
+    assert_eq!(head, [90, 0, 0, 0, 0, 0, 0, 0, 1, 0]);
     // A reserved id is no ordinary domain: no hypercall.
     assert_eq!(x.domain_state(0x7FF0).unwrap(), DomainState::Dead);
     assert_eq!(x.domain_info(u32::MAX).unwrap(), None);
