@@ -165,9 +165,14 @@ fn large_directory_reply() {
     for i in 0..500 {
         c.write(0, &format!("/many/entry-{i:04}"), "");
     }
+    // Socket replies are limited to a payload, as XenServer's oxenstored
+    // limits them: libxenstore lists the directory by parts then.
     let r = c.call(MsgType::Directory, 0, b"/many\0");
-    assert!(r.payload.len() > 4096, "socket replies are not limited");
-    assert_eq!(r.payload.split(|b| *b == 0).filter(|s| !s.is_empty()).count(), 500);
+    assert!(r.is_error() && r.payload == b"E2BIG\0", "{}", r.text());
+    let all = c.directory_parts(0, "/many");
+    assert!(all.len() > 4096);
+    assert_eq!(all.split(|b| *b == 0).filter(|s| !s.is_empty()).count(), 500);
+    assert_eq!(c.ls(0, "/many").len(), 500);
 }
 
 #[test]
@@ -290,21 +295,20 @@ fn a_reader_that_does_not_read_does_not_stall_others() {
 fn a_client_that_does_not_read_its_replies_is_held_back_then_served() {
     let d = Daemon::start();
     let mut c = d.client();
-    for i in 0..500 {
-        c.write(0, &format!("/many/entry-{i:04}"), "");
-    }
-    // 300 replies of 7.5 KB: twice the megabyte of unsent output above
+    // A value as long as the size quota lets it be (quota-maxsize 2048).
+    c.write(0, "/many", &"v".repeat(2000));
+    // 600 replies of 2 KB: more than the megabyte of unsent output above
     // which a connection's requests wait. Nothing is read meanwhile.
     let ask = |c: &mut Client, ids: std::ops::Range<u32>| {
         let mut burst = Vec::new();
         for i in ids {
-            Message::new(MsgType::Directory, i, 0, b"/many\0".to_vec())
+            Message::new(MsgType::Read, i, 0, b"/many\0".to_vec())
                 .unwrap()
                 .encode_into(&mut burst);
         }
         c.send_raw(&burst);
     };
-    ask(&mut c, 1000..1300);
+    ask(&mut c, 1000..1600);
     // Others are served while it is held back. It gets a turn (64
     // requests) in each pass until it is: by the end of the fifth pass
     // after its requests came, 320 requests' worth, and the other's fifth
@@ -314,13 +318,13 @@ fn a_client_that_does_not_read_its_replies_is_held_back_then_served() {
         other.write(0, "/other", &i.to_string());
     }
     // More requests arrive while it is held back.
-    ask(&mut c, 1300..1320);
+    ask(&mut c, 1600..1620);
     other.write(0, "/other", "6");
     // It reads: everything is answered, in order.
-    for i in 1000..1320 {
+    for i in 1000..1620 {
         let r = c.reply();
         assert_eq!(r.req_id, i);
-        assert_eq!(r.payload.len(), 500 * 11);
+        assert_eq!(r.payload.len(), 2000);
     }
     assert_eq!(c.read(0, "/other").unwrap(), "6");
 }

@@ -279,13 +279,44 @@ impl Client {
         }
     }
 
+    /// The children of `path`, as libxenstore's xs_directory gets them:
+    /// DIRECTORY, then DIRECTORY_PART when the listing is longer than a
+    /// payload (E2BIG).
     pub fn ls(&mut self, tx: u32, path: &str) -> Vec<String> {
-        let p = self.ok(MsgType::Directory, tx, &nul_terminated(&[path.as_bytes()]));
+        let r = self.call(MsgType::Directory, tx, &nul_terminated(&[path.as_bytes()]));
+        let p = if r.is_error() && r.payload == b"E2BIG\0" {
+            self.directory_parts(tx, path)
+        } else {
+            assert!(!r.is_error(), "Directory {path:?}: {}", r.text());
+            r.payload
+        };
         String::from_utf8(p)
             .unwrap()
             .split_terminator('\0')
             .map(str::to_string)
             .collect()
+    }
+
+    /// The names of the children of `path` read with DIRECTORY_PART, as
+    /// libxenstore does (`tools/libs/store/xs.c` xs_directory_part).
+    pub fn directory_parts(&mut self, tx: u32, path: &str) -> Vec<u8> {
+        let mut list = Vec::new();
+        loop {
+            assert!(list.len() < 1 << 24, "no end");
+            let r = self.ok(
+                MsgType::DirectoryPart,
+                tx,
+                format!("{path}\0{}\0", list.len()).as_bytes(),
+            );
+            let nul = r.iter().position(|c| *c == 0).expect("generation");
+            let rest = &r[nul + 1..];
+            if rest == b"\0" || rest.ends_with(b"\0\0") {
+                list.extend_from_slice(&rest[..rest.len() - 1]);
+                return list;
+            }
+            assert!(!rest.is_empty(), "no progress");
+            list.extend_from_slice(rest);
+        }
     }
 
     pub fn watch(&mut self, path: &str, token: &str) {

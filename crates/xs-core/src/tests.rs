@@ -269,8 +269,17 @@ impl H {
         }
     }
 
+    /// The children of `p`, as libxenstore's xs_directory gets them:
+    /// DIRECTORY, then DIRECTORY_PART when the listing is longer than a
+    /// payload (E2BIG).
     fn ls(&mut self, c: ConnId, tx: u32, p: &str) -> Vec<String> {
-        let r = self.ok(c, MsgType::Directory, tx, &nul_terminated(&[p.as_bytes()]));
+        let r = self.call(c, MsgType::Directory, tx, &nul_terminated(&[p.as_bytes()]));
+        let r = if r.0 == ty(MsgType::Error) && r.3 == b"E2BIG\0" {
+            directory_parts(self, c, tx, p).0
+        } else {
+            assert_eq!(r.0, ty(MsgType::Directory), "{p}: {}", String::from_utf8_lossy(&r.3));
+            r.3
+        };
         let s = String::from_utf8(r).unwrap();
         s.split_terminator('\0').map(str::to_string).collect()
     }
@@ -806,15 +815,20 @@ fn oversized_request_kills_the_connection() {
 }
 
 #[test]
-fn large_replies_are_not_truncated_on_sockets() {
+fn a_socket_gets_e2big_for_a_listing_longer_than_a_payload() {
+    // As XenServer's oxenstored (`packet_of`): libxenstore refuses a longer
+    // reply after its header and loses the rest of the stream; E2BIG makes
+    // it fall back to DIRECTORY_PART.
     let mut h = H::new();
     let a = h.core.open();
     for i in 0..400 {
         h.write(a, 0, &format!("/big/child-number-{i:05}"), "");
     }
-    let r = h.one(a, MsgType::Directory, "/big");
-    assert!(r.len() > 4096);
-    assert_eq!(r.split(|c| *c == 0).filter(|s| !s.is_empty()).count(), 400);
+    assert_eq!(h.err(a, MsgType::Directory, 0, b"/big\0"), "E2BIG");
+    let (all, _) = directory_parts(&mut h, a, 0, "/big");
+    assert!(all.len() > PAYLOAD_MAX);
+    assert_eq!(all.split(|c| *c == 0).filter(|s| !s.is_empty()).count(), 400);
+    assert_eq!(h.ls(a, 0, "/big").len(), 400);
 }
 
 // ---------------------------------------------------------------- watches
@@ -2138,7 +2152,7 @@ fn reconnect_drops_what_the_ring_held_and_keeps_the_connection() {
 
 #[test]
 fn a_ring_gets_e2big_for_what_does_not_fit_a_payload() {
-    // `ox/connection.ml:242-246`; a socket gets anything.
+    // `ox/connection.ml:242-246`; a socket too (XenServer's `packet_of`).
     let (mut h, a, g) = with_guest(Config::default());
     // 128 names of 31 bytes: a listing of exactly a payload.
     for i in 0..128 {
@@ -2234,8 +2248,9 @@ fn directory_part_lists_a_long_directory_on_a_ring() {
     for i in 0..500 {
         h.write(a, 0, &format!("/local/domain/5/big/child-number-{i:05}"), "");
     }
-    let all = h.one(a, MsgType::Directory, "/local/domain/5/big");
+    let (all, _) = directory_parts(&mut h, a, 0, "/local/domain/5/big");
     assert!(all.len() > 2 * PAYLOAD_MAX);
+    assert_eq!(h.err(a, MsgType::Directory, 0, b"/local/domain/5/big\0"), "E2BIG");
     assert_eq!(h.err(g, MsgType::Directory, 0, b"big\0"), "E2BIG");
     let (parts, gen) = directory_parts(&mut h, g, 0, "big");
     assert_eq!(parts, all);
@@ -4621,8 +4636,9 @@ fn a_value_of_the_size_limit_is_written_with_or_without_missing_parents() {
 
 // ------------------------------------------- events longer than a payload
 
-/// The message a ring gets in place of a watch event longer than a payload
-/// (`ox/connection.ml:242-246`): an error with the event's ids.
+/// The message a connection gets in place of a watch event longer than a
+/// payload (`ox/connection.ml:242-246`; on sockets too, as XenServer's
+/// oxenstored): an error with the event's ids.
 fn e2big_event() -> Out {
     (ty(MsgType::Error), 0, 0, b"E2BIG\0".to_vec())
 }
@@ -4714,16 +4730,10 @@ fn for_the_ring_of_domain_0_an_e2big_holds_a_guest_and_is_never_dropped() {
 }
 
 #[test]
-fn a_socket_gets_an_event_longer_than_a_payload_whole_and_its_source_is_held_at_the_quota() {
+fn a_socket_gets_e2big_for_an_event_longer_than_a_payload_and_its_source_is_held_at_the_quota() {
     let (mut h, _, g, tool) = oversized_watch(8, None);
     assert_eq!(flood(&mut h, g, "data/x", 1000), 9, "8 under the quota, 1 over");
-    let out = h.drain_one(tool);
-    assert_eq!(out.len(), 9);
-    for m in out {
-        assert_eq!((m.0, m.1, m.2), (ty(MsgType::WatchEvent), 0, 0));
-        assert_eq!(m.3.len(), PAYLOAD_MAX + "/x".len());
-        assert!(m.3.starts_with(b"/local/domain/5/data/x\0tt"));
-    }
+    assert_eq!(h.drain_one(tool), vec![e2big_event(); 9]);
     assert!(h.core.wants_input(g));
 }
 

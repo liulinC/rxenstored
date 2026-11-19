@@ -521,7 +521,10 @@ impl Conns {
             return;
         };
         let len: usize = parts.iter().map(|p| p.len()).sum();
-        if c.ring && len > PAYLOAD_MAX {
+        // On every connection, socket or ring, as XenServer's oxenstored
+        // (`packet_of`, for replies and events alike): libxenstore refuses
+        // a reply longer than a payload (`xs.c` read_message, E2BIG).
+        if len > PAYLOAD_MAX {
             // The E2BIG error takes the message's place and its class: in
             // place of an event, it is counted, held for and dropped as
             // the event would be. oxenstored makes it in place of the
@@ -793,8 +796,8 @@ fn own_path(index: &WatchIndex, wid: WatchId, conn: &Conn) -> Vec<u8> {
     }
 }
 
-/// The DIRECTORY reply, or as much of it as goes past `limit`: a ring
-/// gets E2BIG for a listing longer than a payload, however long.
+/// The DIRECTORY reply, or as much of it as goes past `limit`: a listing
+/// longer than a payload gets E2BIG, however long, on any connection.
 fn names(children: &pmap::PMap<Name, Node>, limit: usize) -> Vec<u8> {
     let mut out = Vec::new();
     for k in children.keys() {
@@ -1515,15 +1518,7 @@ impl Core {
     }
 
     /// `part`: the offset of a DIRECTORY_PART.
-    fn reply_outcome(
-        &mut self,
-        id: ConnId,
-        ring: bool,
-        msg: &Message,
-        tid: u32,
-        outcome: &Outcome,
-        part: Option<usize>,
-    ) {
+    fn reply_outcome(&mut self, id: ConnId, msg: &Message, tid: u32, outcome: &Outcome, part: Option<usize>) {
         let (ty, req) = (msg.ty, msg.req_id);
         match outcome {
             Outcome::Done => self.conns.send(id, ty, req, tid, &[b"OK\0"]),
@@ -1531,7 +1526,7 @@ impl Core {
             Outcome::Perms { perms, .. } => self.conns.send(id, ty, req, tid, &[&perms.encode()]),
             Outcome::Children { cgen, children } => {
                 let reply = match part {
-                    None => names(children, if ring { PAYLOAD_MAX } else { usize::MAX }),
+                    None => names(children, PAYLOAD_MAX),
                     Some(off) => part_reply(*cgen, children, off),
                 };
                 self.conns.send(id, ty, req, tid, &[&reply])
@@ -1571,7 +1566,7 @@ impl Core {
                 self.conflicts.record(id, before, &self.root);
             }
             // The reply goes first, then the events (`ox/process.ml:362-368`).
-            self.reply_outcome(id, peer.ring, msg, tid, &outcome, part);
+            self.reply_outcome(id, msg, tid, &outcome, part);
             for c in &changes {
                 self.dispatch(c, id);
             }
@@ -1601,7 +1596,7 @@ impl Core {
             let entry = txlog::Entry::new(op, &outcome, fired, &mut txn.listings);
             txn.bytes += entry.cost();
             txn.log.push(entry);
-            self.reply_outcome(id, peer.ring, msg, tid, &outcome, part);
+            self.reply_outcome(id, msg, tid, &outcome, part);
         }
     }
 
