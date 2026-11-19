@@ -826,7 +826,7 @@ pub fn gen_path(rng: &mut impl Source) -> Vec<u8> {
                 if i > 0 || !relative {
                     s.push(b'/');
                 }
-                s.extend_from_slice(rng.pick(&[&b"a"[..], b"b", b"c"]));
+                s.extend_from_slice(rng.pick::<&[u8]>(&[&b"a"[..], b"b", b"c"]));
             }
             s
         }
@@ -858,30 +858,36 @@ pub fn gen_request(rng: &mut impl Source, open: &[u32]) -> (u32, u32, Vec<u8>) {
             MsgType::SetPerms,
             z(&[
                 &path,
-                rng.pick(&[&b"n0"[..], b"r5", b"b0", b"n5", b"w0", b"n3"]),
-                rng.pick(&[&b"w3"[..], b"r3", b"b5", b"n5"]),
+                *rng.pick::<&[u8]>(&[&b"n0"[..], b"r5", b"b0", b"n5", b"w0", b"n3"]),
+                *rng.pick::<&[u8]>(&[&b"w3"[..], b"r3", b"b5", b"n5"]),
             ]),
         ),
-        22 => (MsgType::SetPerms, z(&[&path, rng.pick(&[&b"n5"[..], b"b3", b"r0"])])),
+        22 => (
+            MsgType::SetPerms,
+            z(&[&path, *rng.pick::<&[u8]>(&[&b"n5"[..], b"b3", b"r0"])]),
+        ),
         // Domain 9 has no connection; acting for domain 0 is rare.
         23 => match rng.below(8) {
             0 => (MsgType::SetTarget, z(&[b"5"])),
-            1 => (MsgType::SetTarget, z(&[rng.pick(&[&b"5"[..], b"3"]), b"0"])),
+            1 => (MsgType::SetTarget, z(&[*rng.pick::<&[u8]>(&[&b"5"[..], b"3"]), b"0"])),
             _ => (
                 MsgType::SetTarget,
-                z(&[rng.pick(&[&b"5"[..], b"3", b"9"]), rng.pick(&[&b"5"[..], b"3", b"7"])]),
+                z(&[
+                    *rng.pick::<&[u8]>(&[&b"5"[..], b"3", b"9"]),
+                    *rng.pick::<&[u8]>(&[&b"5"[..], b"3", b"7"]),
+                ]),
             ),
         },
         10 => (MsgType::SetPerms, z(&[&path, b"q1"])),
         11..=12 => (MsgType::Read, z(&[&path])),
         13 => (MsgType::Directory, z(&[&path])),
         14 => (MsgType::GetPerms, z(&[&path])),
-        15..=16 => (MsgType::Watch, z(&[&path, rng.pick(&[&b"t1"[..], b"t2"])])),
-        17 => (MsgType::Unwatch, z(&[&path, rng.pick(&[&b"t1"[..], b"t2"])])),
+        15..=16 => (MsgType::Watch, z(&[&path, *rng.pick::<&[u8]>(&[&b"t1"[..], b"t2"])])),
+        17 => (MsgType::Unwatch, z(&[&path, *rng.pick::<&[u8]>(&[&b"t1"[..], b"t2"])])),
         18 => (MsgType::TransactionStart, b"\0".to_vec()),
         19..=20 => (
             MsgType::TransactionEnd,
-            rng.pick(&[&b"T\0"[..], b"T\0", b"F\0", b"X\0"]).to_vec(),
+            rng.pick::<&[u8]>(&[&b"T\0"[..], b"T\0", b"F\0", b"X\0"]).to_vec(),
         ),
         _ => (
             if rng.below(2) == 0 {

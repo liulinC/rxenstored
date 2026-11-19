@@ -49,6 +49,9 @@ impl Drop for ExpectImpossible {
     }
 }
 
+// `impossible` panics only with debug assertions: a release build (the
+// rpm profile of a distribution's %check) logs and goes on.
+#[cfg(debug_assertions)]
 #[test]
 #[should_panic(expected = "impossible state: a test's")]
 fn a_debug_build_stops_at_an_impossible_state() {

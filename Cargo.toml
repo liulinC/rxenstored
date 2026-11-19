@@ -6,7 +6,7 @@ members = ["crates/xs-wire", "crates/xs-sys", "crates/xs-core", "crates/xs-daemo
 version = "0.0.1"
 edition = "2021"
 # The toolchain the workspace is built and tested with; older ones were not tried.
-rust-version = "1.96.1"
+rust-version = "1.89"
 license = "GPL-2.0-only"
 authors = ["Olivier Lambert <olivier.lambert@vates.tech>"]
 repository = "https://github.com/olivierlambert/rxenstored"
