@@ -167,11 +167,20 @@ impl Conns {
             _ => true,
         };
         if let (true, Some(who)) = (shown, self.who(id)) {
+            let whole = [msg.payload.as_slice()];
+            let censored;
+            let parts: &[&[u8]] = match private_write(msg) {
+                Some(path) => {
+                    censored = [path, &b"\0[omitted]"[..]];
+                    &censored
+                }
+                None => &whole,
+            };
             sink.record(&Record {
                 who,
                 tid: msg.tx_id,
                 op: Op::Request(msg.ty),
-                data: Data::Parts(&[&msg.payload]),
+                data: Data::Parts(parts),
             });
         }
     }
@@ -262,6 +271,21 @@ impl Conns {
         }
         None
     }
+}
+
+/// The path of a WRITE of a guest's clipboard, whose value the access log
+/// must not show: XenServer's oxenstored writes `<path> [omitted]` in its
+/// place (CA-136105, `censor_private_data`). The guest-side relative path
+/// counts too.
+fn private_write(msg: &Message) -> Option<&[u8]> {
+    if msg.msg_type() != Some(MsgType::Write) {
+        return None;
+    }
+    let path = msg.payload.split(|b| *b == 0).next()?;
+    let private = (path.starts_with(b"/local/domain")
+        && (path.ends_with(b"/data/set_clipboard") || path.ends_with(b"/data/report_clipboard")))
+        || path == b"data/report_clipboard";
+    private.then_some(path)
 }
 
 #[cfg(test)]

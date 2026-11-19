@@ -147,6 +147,36 @@ fn write_class_requests_are_logged_by_default() {
 }
 
 #[test]
+fn clipboard_contents_are_not_logged() {
+    // CA-136105: XenServer's oxenstored writes `<path> [omitted]`.
+    let mut t = T::new(Switches::default());
+    for path in [
+        &b"/local/domain/5/data/set_clipboard"[..],
+        b"/local/domain/5/data/report_clipboard",
+    ] {
+        let payload = [path, b"\0secret"].concat();
+        assert_eq!(
+            t.a(MsgType::Write, 0, &payload),
+            [req(A, 0, MsgType::Write, &[path, b"\0[omitted]"].concat())]
+        );
+    }
+    // The guest's own relative path.
+    let g = t.core.open_domain(5);
+    t.take();
+    let out = t.send(g, MsgType::Write as u32, 0, b"data/report_clipboard\0secret");
+    assert_eq!(out[0].3, b"data/report_clipboard\0[omitted]");
+    // Other paths, and other requests on the clipboard, as they came.
+    for (ty, payload) in [
+        (MsgType::Write, &b"/local/domain/5/data/set_clipboard_x\0v"[..]),
+        (MsgType::Write, b"/data/report_clipboard\0v"),
+        (MsgType::Write, b"/local/domain/5/data/other\0v"),
+        (MsgType::Rm, b"/local/domain/5/data/set_clipboard\0"),
+    ] {
+        assert_eq!(t.a(ty, 0, payload)[0], req(A, 0, ty, payload), "{payload:?}");
+    }
+}
+
+#[test]
 fn reads_only_with_the_read_switch() {
     let reads = [
         (MsgType::Read, &b"/tool/xenstored\0"[..]),
