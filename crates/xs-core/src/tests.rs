@@ -2095,23 +2095,45 @@ fn a_dead_domain_loses_its_connection_nodes_and_acl_entries_and_release_domain_f
     assert_eq!(h.dom_exc(&[(2, DomainState::Shutdown)]), [1, 2]);
     assert_eq!(events(&h.drain()), fired);
     assert!(h.calls().is_empty());
+    // Every VIRQ fires, even with nothing shut down or dead here: Xen
+    // raises it when a domain this core no longer knows becomes dead or
+    // goes, and watchers rescan on it.
     assert_eq!(h.dom_exc(&[]), [1, 2]);
-    assert!(h.drain().is_empty(), "nothing shut down or dead: nothing fires");
+    assert_eq!(events(&h.drain()), fired);
     h.dom_exc(&[(1, DomainState::Dead)]);
     assert_eq!(events(&h.drain()), fired);
     assert_eq!(h.calls(), [Call::Disconnect(g[0], 1)]);
 }
 
 #[test]
-fn without_domains_a_virq_asks_nothing_and_fires_nothing() {
+fn without_domains_a_virq_asks_nothing_and_still_fires_release_domain() {
     let mut h = H::new();
     let a = h.core.open();
     h.watch(a, "@releaseDomain", "a");
     assert_eq!(h.dom_exc(&[(0, DomainState::Dead)]), Vec::<u32>::new());
+    assert_eq!(events(&h.drain()), [ev(a, "@releaseDomain", "a")]);
     h.core.open_domain(0);
     assert_eq!(h.dom_exc(&[(0, DomainState::Dead)]), Vec::<u32>::new());
-    assert!(h.drain().is_empty());
+    assert_eq!(events(&h.drain()), [ev(a, "@releaseDomain", "a")]);
     assert!(h.calls().is_empty());
+}
+
+#[test]
+fn a_virq_after_release_fires_release_domain_again() {
+    // The toolstack RELEASEs a domain while Xen is still tearing it down: a
+    // watcher that rescanned on that @releaseDomain (xenconsoled keeps the
+    // console page mapped until it sees the domain dying) hears again at
+    // the VIRQ Xen raises when the domain is dead, which no longer
+    // concerns any domain the core knows.
+    let mut h = H::new();
+    let a = h.core.open();
+    h.one(a, MsgType::Mkdir, "/local/domain/7");
+    h.introduce(a, 7, 7, 7);
+    h.watch(a, "@releaseDomain", "console");
+    let out = h.raw(a, ty(MsgType::Release), 0, b"7\0");
+    assert_eq!(events(&out), [ev(a, "@releaseDomain", "console")]);
+    assert_eq!(h.dom_exc(&[]), Vec::<u32>::new());
+    assert_eq!(events(&h.drain()), [ev(a, "@releaseDomain", "console")]);
 }
 
 #[test]

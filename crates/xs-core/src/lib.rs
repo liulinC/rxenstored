@@ -970,9 +970,16 @@ impl Core {
     /// VIRQ_DOM_EXC fired: `state` gives Xen's view of a domain. It is
     /// asked, in domid order, for every domain that has a connection but
     /// domain 0. The dead lose their connection, their nodes and their ACL
-    /// entries; then `@releaseDomain` fires once if a domain died or is
-    /// shut down: it fires again at every VIRQ while one stays shut down
-    /// (`ox/domains.ml:120-148`, `ox/xenstored.ml:488-497`).
+    /// entries; then `@releaseDomain` fires once, at every VIRQ.
+    ///
+    /// oxenstored fires it only when a domain it still knows died or is
+    /// shut down (`ox/domains.ml:120-148`). But a domain RELEASE dropped,
+    /// or one found dying, can still be dying in Xen: a watcher that
+    /// rescanned on that event (xenconsoled keeps a domain's console page
+    /// mapped until it sees it dying) must hear when it is dead or gone,
+    /// and Xen says so only with this VIRQ (`common/domain.c` domain_kill,
+    /// complete_domain_destroy). Without it the domain stays a zombie until
+    /// some other domain changes state.
     pub fn domains_changed(&mut self, state: &mut dyn FnMut(u32) -> DomainState, machine: &mut dyn Machine) {
         // A BTreeMap: in domid order.
         let ids: Vec<u32> = self.domains.keys().copied().filter(|d| *d != 0).collect();
@@ -994,9 +1001,8 @@ impl Core {
         for &domid in &dead {
             self.drop_domain(domid, machine);
         }
-        if shutdown || !dead.is_empty() {
-            self.fire_special(b"@releaseDomain");
-        }
+        let _ = shutdown;
+        self.fire_special(b"@releaseDomain");
     }
 
     /// Bytes received on a connection; processed by `process`.
